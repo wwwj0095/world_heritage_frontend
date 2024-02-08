@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<link rel="shortcut icon" type="image/x-icon" href="https://cdn.uviewui.com/uview/common/favicon.ico">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+		<title>
+			<%= htmlWebpackPlugin.options.title %>
+		</title>
+		<!-- 正式发布的时候使用，开发期间不启用。↓ -->
+        <script src="https://accounts.google.com/gsi/client"></script>
+<!--         <script src="/static/common/js/touch-emulator.js"></script>-->
+       <script src="/dist/static/common/js/touch-emulator.js"></script>
+<!--        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>-->
+		<script>
+            TouchEmulator();
+		</script>
+        <style>
+            ::-webkit-scrollbar{
+                display: none;
+            }
+        </style>
+        <style>
+
+            /* HTML marker styles */
+            .price-tag {
+                background-color: #72CD18;
+                border-radius: 4px;
+                color: #FFFFFF;
+                font-size: 10px;
+                padding: 3px;
+                position: relative;
+            }
+
+            .gm-style-iw gm-style-iw-c {
+                padding: 0 !important;
+            }
+            //.price-tag::after {
+            //    content: "";
+            //    position: absolute;
+            //    left: 50%;
+            //    top: 100%;
+            //    transform: translate(-50%, 0);
+            //    width: 0;
+            //    height: 0;
+            //    border-left: 4px solid transparent;
+            //    border-right: 4px solid transparent;
+            //    border-top: 4px solid #72CD18;
+            //}
+        </style>
+        <!-- 正式发布的时候使用，开发期间不启用。↑ -->
+		<script>
+			document.addEventListener('DOMContentLoaded', function() {
+				document.documentElement.style.fontSize = document.documentElement.clientWidth / 20 + 'px'
+			})
+		</script>
+		<link rel="stylesheet" href="<%= BASE_URL %>static/index.css" />
+	</head>
+	<body>
+		<!-- 该文件为 H5 平台的模板 HTML，并非应用入口。 -->
+		<!-- 请勿在此文件编写页面代码或直接运行此文件。 -->
+		<!-- 详见文档：https://uniapp.dcloud.io/collocation/manifest?id=h5-template -->
+
+		<div id="app"></div>
+		<!-- built files will be auto injected -->
+		<script>
+			/*BAIDU_STAT*/
+		</script>
+	</body>
+</html>

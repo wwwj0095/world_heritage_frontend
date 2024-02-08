@@ -1,0 +1,60 @@
+{
+	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "世界遺産の旅",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/index/list",
+			"style": {
+				"navigationBarTitleText": "チェックイン",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/index/share",
+			"style": {
+				"navigationBarTitleText": "SNSにシェアする",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom",
+				"navigationBarTextStyle": "white"
+			}
+		},
+		{
+			"path": "pages/index/check_in",
+			"style": {
+				"navigationBarTitleText": "リスト",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/index/h_list",
+			"style": {
+				"navigationBarTitleText": "リスト",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/index/detail",
+			"style": {
+				"navigationBarTitleText": "サイト情報",
+				"navigationBarHidden": true,
+				"navigationStyle": "custom"
+			}
+		}
+	],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "世界遺産の旅",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF",
+		"onReachBottomDistance": 300
+	}
+}
