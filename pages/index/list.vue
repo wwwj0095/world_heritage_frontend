@@ -34,13 +34,13 @@
             <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
               <u-index-anchor :key="countryIndex" :id="countryIndex" :text="indexList[countryHeritageIndex]" style="display:none;"></u-index-anchor>
               <u-row>
-                <u-col span="6">
+                <u-col span="8">
                   <view>
-                    <u--text color="#1C3B53" :text="country.name_en" size="12" :lines="1" style="padding: 0 1rem"></u--text>
+                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1" style="padding: 0 1rem"></u--text>
                   </view>
                 </u-col>
-                <u-col span="6">
-                  <view style="font-size: 12px; color: #1C3B53; margin-left: 150px;">
+                <u-col span="4">
+                  <view style="font-size: 12px; color: #1C3B53; margin-left: 80px;">
                     <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.heritages.length }}</span>
                   </view>
                 </u-col>
@@ -87,12 +87,12 @@
             <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
               <u-index-anchor :text="indexList[countryHeritageIndex]" style="display:none;"></u-index-anchor>
               <u-row>
-                <u-col span="6">
+                <u-col span="8">
                   <view>
-                    <u--text color="#1C3B53" :text="country.name_jp" size="12" :lines="1" style="padding: 0 1rem"></u--text>
+                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1" style="padding: 0 1rem"></u--text>
                   </view>
                 </u-col>
-                <u-col span="6">
+                <u-col span="4">
                   <view>
                     <u--text color="#1C3B53" align="right" :text="`${country.selected_count ? country.selected_count : 0}/ ${country.heritages.length}`" size="12" :lines="1" style="margin-right: 40px; margin-left: -23px"></u--text>
                   </view>

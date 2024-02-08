@@ -63,7 +63,7 @@
                    @scrolltolower="lower" @scroll="scroll">
         <view v-for="(country, countryIndex) in countryHeritageList" :key="countryIndex">
           <view>
-            <span  style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_jp }}</span>
+            <span  style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_jp }}/{{ country.name_en }}</span>
 
             <view v-for="(heritage, heritageIndex) in country.heritages" style="padding: 8px 0"  @click="listItemClick(heritage)">
 
