@@ -28,7 +28,7 @@
 
     <!-- 核心内容区域 -->
     <view v-if="deviceType === 'phone'" class="list-area" style="margin-top: 10px;padding: 0 0.65rem">
-      <u-index-list :index-list="indexList" :custom-nav-height="100">
+      <u-index-list ref="uIndexListRef" :index-list="indexList" :custom-nav-height="100">
         <template v-for="(countryHeritages, countryHeritageIndex) in countryHeritageList">
           <u-index-item>
             <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
@@ -411,8 +411,9 @@
 </template>
 
 <script>
-import {getCheckInInfo, getContinent, getHeritage, getUserInfo, storeCheckIn} from '@/util/request/api.js';
-import { Node, Canvas } from '@/pages/components/html2canvas/index';
+import {getCheckInInfo, getContinent, getUserInfo} from '@/util/request/api.js';
+import heritageList from '@/common/heritage_list.json';
+import {Canvas, Node} from '@/pages/components/html2canvas/index';
 
 export default {
   data() {
@@ -497,12 +498,29 @@ export default {
       }
     })
     uni.$on('scrolltolower',function(data){
+      // 如果当前索引有值，那么就不再请求数据
       that.indexListIndex++
-      if (that.indexList[that.indexListIndex] === that.listQuery.letters) {
-        return;
-      }
-      that.listQuery.letters = that.indexList[that.indexListIndex]
-      that.getHeritageList()
+      let indexListFlag = that.indexList
+      // if (that.countryHeritageList[that.indexListIndex] !== undefined) {
+      //   return;
+      // }
+
+      // that.indexListIndex = 1
+      // if (that.indexList[that.indexListIndex] === that.listQuery.letters) {
+      //   return;
+      // }
+      // that.listQuery.letters = that.indexList[that.indexListIndex]
+      // that.getHeritageList()
+      uni.showLoading({
+        title: 'Loading'
+      });
+      that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
+      that.eventHandler()
+      that.$forceUpdate()
+      uni.hideLoading()
+      // that.$nextTick(() => {
+      //   that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
+      // })
     })
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
@@ -512,6 +530,9 @@ export default {
     this.getHeritageList()
   },
   methods: {
+    eventHandler(e) {
+      this.$refs.uIndexListRef.activeIndex = this.indexListIndex
+    },
     // 遗迹大洲切换
     continentChange(e) {
       this.listQuery.letters = ''
@@ -646,26 +667,34 @@ export default {
     },
     // 获取遗产列表
     getHeritageList() {
-      uni.showLoading({
-        title: 'Loading'
-      });
-      getHeritage({
-        custom: { auth: false },
-        params: this.listQuery
+      this.indexList.forEach((item, index) => {
+        if (index === this.indexListIndex) {
+          this.countryHeritageList[0] = heritageList[this.indexListIndex]
+        } else {
+          this.countryHeritageList[index] = []
+        }
       })
-          .then(response => {
-            if (this.countryHeritageList.length) {
-              this.countryHeritageList = this.countryHeritageList.concat(
-                  response.data.countries
-              );
-            } else {
-              this.countryHeritageList = response.data.countries;
-            }
-            uni.hideLoading()
-          })
-          .catch(error => {
-            uni.hideLoading()
-          });
+      // this.countryHeritageList = heritageList
+      // uni.showLoading({
+      //   title: 'Loading'
+      // });
+      // getHeritage({
+      //   custom: { auth: false },
+      //   params: this.listQuery
+      // })
+      //     .then(response => {
+      //       if (this.countryHeritageList.length) {
+      //         this.countryHeritageList = this.countryHeritageList.concat(
+      //             response.data.countries
+      //         );
+      //       } else {
+      //         this.countryHeritageList = response.data.countries;
+      //       }
+      //       uni.hideLoading()
+      //     })
+      //     .catch(error => {
+      //       uni.hideLoading()
+      //     });
     },
     // 生成大洲背景海报
     genStateBgImage(imageX) {
