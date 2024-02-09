@@ -34,13 +34,15 @@
             <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
               <u-index-anchor :key="countryIndex" :id="countryIndex" :text="indexList[countryHeritageIndex]" style="display:none;"></u-index-anchor>
               <u-row>
-                <u-col span="8">
-                  <view>
-                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1" style="padding: 0 1rem"></u--text>
+                <u-col span="9">
+                  <view style="display: flex; justify-content: space-between; padding: 0 0 0 20px;">
+                    <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
+                    <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
+                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1"></u--text>
                   </view>
                 </u-col>
-                <u-col span="4">
-                  <view style="font-size: 12px; color: #1C3B53; margin-left: 80px;">
+                <u-col span="3">
+                  <view style="font-size: 12px; color: #1C3B53; margin-left: 100rpx;">
                     <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.heritages.length }}</span>
                   </view>
                 </u-col>
@@ -50,7 +52,7 @@
                     v-for="(heritageItem, heritageIndex) in country.heritages"
                     :key="heritageIndex"
                     :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
-                    style="height: 130px;justify-content: normal; padding: 0.5rem 1rem; margin: 3px 3px; width: 48%;  position: relative;"
+                    style="height: 130px;justify-content: normal; padding: 10px 20px; margin: 3px 3px; width: 48%;  position: relative;"
                     @click="heritageClick(heritageItem, heritageIndex, countryIndex, countryHeritageIndex)">
                   <view>
                     <u--image :showLoading="true" :src="heritageItem.cover_img" width="152" height="70px" style="text-align: center"></u--image>
@@ -138,7 +140,7 @@
     <!-- 底部固定按钮 -->
     <view class="bottom-button-area">
       <view style="display: flex; justify-content: space-between; align-items: center; text-align: center; width: 100%">
-        <view class="bottom-button" style="margin: 0 0.8rem;" @click="selectHeritage">
+        <view class="bottom-button" style="margin: 0 0.8rem;" @click="popupShow = true">
           選択済（{{ selectCheckedIds.length }}件）
         </view>
         <view class="bottom-button" style="margin: 0 1rem;"  @click="redirectToSharePage">チェックイン</view>
@@ -146,7 +148,7 @@
     </view>
     <!-- 底部固定按钮 -->
 
-    <!-- 弹出框部分 -->
+    <!-- 选择遗产列表弹出框部分 -->
     <view>
       <u-popup :show="popupShow" mode="center"  @close="popupShow = false">
         <view style="height: 555px;">
@@ -190,7 +192,7 @@
                 text-align: center;
                 width: 100%;">
               <view class="bottom-button" style="margin: 0 30rpx;" @click="clearCheckSelected">クリア</view>
-              <view class="bottom-button" style="margin: 0 30rpx;" @click="popupShow = false">確認</view>
+              <view class="bottom-button" style="margin: 0 30rpx;" @click="confirmSelected">確認</view>
             </view>
           </view>
           <!--已选中的数据滚动区域-->
@@ -199,7 +201,7 @@
         </view>
       </u-popup>
     </view>
-    <!-- 弹出框部分 -->
+    <!-- 选择遗产列表弹出框部分 -->
 
     <!-- 分享页面弹出框 -->
     <view>
@@ -539,15 +541,6 @@ export default {
         }
       }
       this.selectCheckedIds = this.selectedHeritageList.map(item => item.id)
-      this.selectCheckedList = this.selectedHeritageList.map(item => {
-        return {
-          id: item.id,
-          is_checked: true,
-          countryHeritageIndex: countryHeritageIndex,
-          countryIndex: countryIndex,
-          heritageIndex: heritageIndex
-        }
-      })
       // 计算已经选择的国家的数量
       this.countryHeritageList[countryHeritageIndex][countryIndex].selected_count = this.countryHeritageList[countryHeritageIndex][countryIndex].heritages.filter(item => item.is_selected).length
     },
@@ -564,27 +557,33 @@ export default {
         uni.hideLoading()
       })
     },
-    // 弹出已选中的遗迹列表popup框
-    selectHeritage() {
-      this.popupShow = true
+    // 遗迹选择框确认按钮
+    confirmSelected() {
+      this.selectedHeritageList = this.selectedHeritageList.filter(item => item.is_checked)
+      this.popupShow = false
     },
     // 已选择的遗迹的点击事件,
     selectHeritageClick(heritageItem) {
       heritageItem.is_checked = !heritageItem.is_checked
+      heritageItem.is_selected = !heritageItem.is_selected
       this.$forceUpdate()
     },
-
-
     // 清空所有选中状态
     clearCheckSelected() {
       this.selectedHeritageList.forEach((item, index) => {
         item.is_checked = false
+        item.is_selected = false
       })
       this.selectCheckedIds = []
       this.$forceUpdate()
     },
     // 跳转到分享页面
     redirectToSharePage() {
+      // 判断有没有选择了遗产数据, 如果没有则弹框提示
+      if (!this.selectCheckedIds.length) {
+        this.showToast('選択された遺産がありません')
+        return
+      }
       // 如果是在移动设备上, 那么就跳转到分享页面, 否则就生成海报
       if (this.deviceType === 'phone') {
         uni.$u.route({
@@ -631,17 +630,6 @@ export default {
         })
       }
     },
-
-
-    // 弹出已选择的popup框
-    popSelectHeritage() {
-      if (!this.isLogin) {
-        this.$refs.tabList.showMobileSNSLogin()
-        return false;
-      } else {
-        this.popupShow = true
-      }
-    },
     // 分享到社交平台
     shareToSNS() {
       this.sharePopupShow = true
@@ -678,72 +666,6 @@ export default {
           .catch(error => {
             uni.hideLoading()
           });
-    },
-    // 生成图片海报
-    generatePoster() {
-      // 在这里将数据保存到数据库中，保存成功之后跳转到分享页面
-      storeCheckIn({ heritage_ids: this.selectCheckedIds}).then((response) => {
-        this.popupShow = false
-        if (response.code === 1) {
-          this.$refs.uToast.show({
-            title: response.msg,
-            message:response.msg,
-            duration: 2000
-          })
-          return;
-        }
-        // 如果是在移动设备上, 那么就跳转到分享页面, 否则就生成海报
-        if (this.deviceType === 'phone') {
-          uni.$u.route({
-            url: 'pages/index/share',
-            params: {
-              params: this.selectCheckedIds.length ? this.selectCheckedIds.join(',') : ' '
-            }
-          })
-        } else {
-          // 去请求数据
-          this.shareInfoQuery.params = response.data.join(',')
-          getCheckInInfo({ heritage_ids: this.selectCheckedIds} ).then((response) => {
-            if (response.code === 1) {
-              this.showToast(response.msg)
-            }
-            if (response.code === 0) {
-              this.selectedHeritageStatistics = response.data
-              // 遍历该数据，为每个大洲变量赋值
-              this.selectedHeritageStatistics.continent_data_list.forEach((item, index) => {
-                if (item.name_en === "Europe") {
-                  this.EuropeCount = item.count
-                }
-                if (item.name_en === "Africa") {
-                  this.AfricaCount = item.count
-                }
-                if (item.name_en === "Asia") {
-                  this.AsiaCount = item.count
-                }
-                if (item.name_en === "North America") {
-                  this.NorthAmericaCount = item.count
-                }
-                if (item.name_en === "Oceania") {
-                  this.OceaniaCount = item.count
-                }
-                if (item.name_en === "Central America") {
-                  this.CentralAmericaCount = item.count
-                }
-              })
-              this.genStateBgImage(372, true)
-              this.sharePageShow = true
-            }
-          }).catch((error) => {
-            this.showToast('データの取得に失敗しました')
-          })
-        }
-      }).catch((error) => {
-        this.$refs.uToast.show({
-          title: 'チェックイン失敗',
-          message: "チェックイン失敗",
-          duration: 2000
-        })
-      });
     },
     // 生成大洲背景海报
     genStateBgImage(imageX) {
@@ -1068,6 +990,14 @@ export default {
           .catch(() => {
             this.showToast('画像の生成に失敗しました')
           });
+    },
+    // 通知
+    showToast(message) {
+      this.$refs.uToast.show({
+        type: 'default',
+        title: '成功',
+        message: message
+      })
     },
     // 跳转到Google分享页面
     shareToGoogle() {

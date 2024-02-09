@@ -266,6 +266,7 @@ export default {
     await this.$gmapApiPromiseLazy();
   },
   methods: {
+    // 通知
     showToast(message) {
       this.$refs.uToast.show({
         type: 'default',
