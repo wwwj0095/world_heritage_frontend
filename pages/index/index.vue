@@ -508,7 +508,7 @@ export default {
 
         let middle_content = `<div style="margin-left: 12px; font-size: 14px; font-weight: 700; text-align: center;">${property.name_jp}</div></div>
                     <div style="display: flex;">
-                    <div>${property.states_name_jp}</div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>
+                    <div><a href="https://world-heritage-d0047ce80266.herokuapp.com/client/#/pages/index/detail?id=${property.id}">${property.states_name_jp}</a></div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>
 </div>
                 `
 
