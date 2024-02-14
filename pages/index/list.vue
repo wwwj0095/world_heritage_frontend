@@ -491,37 +491,37 @@ export default {
       // }
     }
     let that = this
-    uni.$on('tabListIndex',function(data){
-      if (that.countryHeritageList[data.curIndex] === undefined) {
-        that.listQuery.letters = that.indexList[data.curIndex]
-        that.getHeritageList()
-      }
-    })
-    uni.$on('scrolltolower',function(data){
-      // 如果当前索引有值，那么就不再请求数据
-      that.indexListIndex++
-      let indexListFlag = that.indexList
-      // if (that.countryHeritageList[that.indexListIndex] !== undefined) {
-      //   return;
-      // }
-
-      // that.indexListIndex = 1
-      // if (that.indexList[that.indexListIndex] === that.listQuery.letters) {
-      //   return;
-      // }
-      // that.listQuery.letters = that.indexList[that.indexListIndex]
-      // that.getHeritageList()
-      uni.showLoading({
-        title: 'Loading'
-      });
-      that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
-      that.eventHandler()
-      that.$forceUpdate()
-      uni.hideLoading()
-      // that.$nextTick(() => {
-      //   that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
-      // })
-    })
+    // uni.$on('tabListIndex',function(data){
+    //   if (that.countryHeritageList[data.curIndex] === undefined) {
+    //     that.listQuery.letters = that.indexList[data.curIndex]
+    //     that.getHeritageList()
+    //   }
+    // })
+    // uni.$on('scrolltolower',function(data){
+    //   // 如果当前索引有值，那么就不再请求数据
+    //   that.indexListIndex++
+    //   let indexListFlag = that.indexList
+    //   if (that.countryHeritageList[that.indexListIndex] !== undefined) {
+    //     return;
+    //   }
+    //
+    //   that.indexListIndex = 1
+    //   if (that.indexList[that.indexListIndex] === that.listQuery.letters) {
+    //     return;
+    //   }
+    //   that.listQuery.letters = that.indexList[that.indexListIndex]
+    //   that.getHeritageList()
+    //   uni.showLoading({
+    //     title: 'Loading'
+    //   });
+    //   that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
+    //   that.eventHandler()
+    //   that.$forceUpdate()
+    //   uni.hideLoading()
+    //   that.$nextTick(() => {
+    //     that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
+    //   })
+    // })
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
@@ -667,13 +667,9 @@ export default {
     },
     // 获取遗产列表
     getHeritageList() {
-      this.indexList.forEach((item, index) => {
-        if (index === this.indexListIndex) {
-          this.countryHeritageList[0] = heritageList[this.indexListIndex]
-        } else {
-          this.countryHeritageList[index] = []
-        }
-      })
+      // 直接获取本地数据
+      this.countryHeritageList = heritageList
+      // 通过接口去获取数据
       // this.countryHeritageList = heritageList
       // uni.showLoading({
       //   title: 'Loading'

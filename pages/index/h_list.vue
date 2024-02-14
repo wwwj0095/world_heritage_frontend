@@ -63,6 +63,8 @@
                    @scrolltolower="lower" @scroll="scroll">
         <view v-for="(country, countryIndex) in countryHeritageList" :key="countryIndex">
           <view>
+            <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
+            <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
             <span  style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_jp }}/{{ country.name_en }}</span>
 
             <view v-for="(heritage, heritageIndex) in country.heritages" style="padding: 8px 0"  @click="listItemClick(heritage)">
@@ -107,6 +109,7 @@
 
 <script>
 import {getMyCheckInHeritage, getHeritageCategory, getHeritageCountry, getUserInfo, getAllHeritage} from '@/util/request/api.js';
+import heritageList from '@/common/h_list.json';
 
 export default {
   data() {
@@ -177,7 +180,8 @@ export default {
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
-    this.getHeritageList()
+    this.countryHeritageList = heritageList.heritage_list
+    // this.getHeritageList()
     // 获取遗产分类列表
     this.getHeritageCategoryList()
     // 获取遗产国家列表
@@ -196,7 +200,6 @@ export default {
               return false
             } else {
               this.countryHeritageList = this.countryHeritageList.concat(response.data.heritage_list)
-              // console.log(this.countryHeritageList);
               // this.indexList = response.data.heritage_list_country_first_letter_index
               uni.hideLoading()
             }
