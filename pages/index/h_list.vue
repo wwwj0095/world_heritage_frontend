@@ -75,8 +75,9 @@
           <view>
             <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
             <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
-            <span  style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_jp }}/{{ country.name_en }}</span>
-
+            <span v-if="currentLanguage === 'jp'" style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_jp }}/{{ country.name_en }}</span>
+            <span v-else-if="currentLanguage === 'en'" style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_en }}</span>
+            <span v-else style="font-size: 13px; color: #1C3B53; font-weight: 700"> {{ country.name_cn }}/{{ country.name_en }}</span>
             <view v-for="(heritage, heritageIndex) in country.heritages" style="padding: 8px 0"  @click="listItemClick(heritage)">
 
               <view style="display:flex; height: 70px">
@@ -85,7 +86,9 @@
                 </view>
                 <view style="display: flex; flex-direction: column; justify-content: space-between; font-size: 15px; margin-left: 10px">
                   <view style="height: 23.33px">
-                    <u--text :text="heritage.name_jp" lines="2" size="13px" color="#1C3B53"></u--text>
+                    <u--text v-if="currentLanguage === 'jp'" :text="heritage.name_jp" lines="2" size="13px" color="#1C3B53"></u--text>
+                    <u--text v-else-if="currentLanguage === 'en'" :text="heritage.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
+                    <u--text v-else :text="heritage.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
                   </view>
                   <view style="height: 23.33px; margin-top: 10px;">
                     <svg  style="height: 16px" v-if="heritage.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -146,6 +149,7 @@ export default {
       categorySelectPlaceholder: '基準：全て',
       searchPlaceholder: '検索キーワード',
       scrollTop: 0,
+      currentLanguage: 'cn',
       tabListData: [],
       old: {
         scrollTop: 0,
@@ -190,27 +194,24 @@ export default {
       }
     });
     if (options.token && !this.isLogin) {
-      // 再判断是否是同一个设备
-      // if (device_id === options.device_id) {
-        // 代表登录成功
-        uni.setStorageSync('auth_token', options.token);
-        this.getUserInfo(options.login_type);
-      // }
+      // 代表登录成功
+      uni.setStorageSync('auth_token', options.token);
+      this.getUserInfo(options.login_type);
     }
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
-    // this.countryHeritageList = heritageList.heritage_list
+    this.countryHeritageList = heritageList.heritage_list
 
-    let localLanguage = uni.getStorageSync('local_lang');
-    if (localLanguage === 'jp') {
+    this.currentLanguage = uni.getStorageSync('local_lang');
+    if (this.currentLanguage === 'jp') {
       this.categorySelectData = categoryJP
       this.countrySelectData  = heritageCountryJP
       this.countrySelectPlaceholder = '国家：全て'
       this.categorySelectPlaceholder = '基準：全て'
       this.searchPlaceholder = '検索キーワード'
       this.tabListData = tab_list_jp
-    } else if (localLanguage === 'en') {
+    } else if (this.currentLanguage === 'en') {
       this.categorySelectData = categoryEN
       this.countrySelectData  = heritageCountryEN
       this.countrySelectPlaceholder = 'Country: All'
