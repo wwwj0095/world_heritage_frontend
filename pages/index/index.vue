@@ -79,6 +79,7 @@ import {
 import tab_list_en from "@/common/tab_list_en.json";
 import tab_list_jp from "@/common/tab_list_jp.json";
 import tab_list_cn from "@/common/tab_list_cn.json";
+import heritage_country_count from "@/common/heritage_country_count.json";
 export default {
   data() {
     return {
@@ -298,12 +299,15 @@ export default {
           }
         })
       } else {
-        getHeritageCountryCount().then((response) => {
-          if (response.code === 0) {
-            countryHeritageData = response.data
-            showCountryHeritageMarker()
-          }
-        })
+        countryHeritageData = heritage_country_count
+        showCountryHeritageMarker()
+        // 未登录时，使用本地数据
+        // getHeritageCountryCount().then((response) => {
+        //   if (response.code === 0) {
+        //     countryHeritageData = heritage_country_count
+        //     showCountryHeritageMarker()
+        //   }
+        // })
       }
 
       const infoWindow = new google.maps.InfoWindow();

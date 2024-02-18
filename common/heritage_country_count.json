@@ -1,0 +1,1354 @@
+[
+  {
+    "id": 1,
+    "name_jp": "🐛アフガニスタン",
+    "latitude": "34.352865",
+    "longitude": "62.2040287",
+    "name_en": "Afghanistan",
+    "count": 2
+  },
+  {
+    "id": 2,
+    "name_jp": "アルバニア",
+    "latitude": "41.11023",
+    "longitude": "20.0866554",
+    "name_en": "Albania",
+    "count": 4
+  },
+  {
+    "id": 3,
+    "name_jp": "アルジェリア",
+    "latitude": "27.9716342",
+    "longitude": "-0.1869644",
+    "name_en": "Algeria",
+    "count": 7
+  },
+  {
+    "id": 4,
+    "name_jp": "アンドラ",
+    "latitude": "42.50779",
+    "longitude": "1.52109",
+    "name_en": "Andorra",
+    "count": 1
+  },
+  {
+    "id": 5,
+    "name_jp": "アンゴラ",
+    "latitude": "-9.3005898",
+    "longitude": "14.9134098",
+    "name_en": "Angola",
+    "count": 1
+  },
+  {
+    "id": 6,
+    "name_jp": "アンティグア・バーブーダ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Antigua and Barbuda",
+    "count": 1
+  },
+  {
+    "id": 7,
+    "name_jp": "アルゼンチン",
+    "latitude": "-31.7413197",
+    "longitude": "-60.5115471",
+    "name_en": "Argentina",
+    "count": 12
+  },
+  {
+    "id": 8,
+    "name_jp": "アルメニア",
+    "latitude": "44.9873603",
+    "longitude": "41.1111326",
+    "name_en": "Armenia",
+    "count": 3
+  },
+  {
+    "id": 9,
+    "name_jp": "オーストラリア",
+    "latitude": "-40.3523065",
+    "longitude": "175.6082145",
+    "name_en": "Australia",
+    "count": 20
+  },
+  {
+    "id": 10,
+    "name_jp": "オーストリア",
+    "latitude": "47.1537165",
+    "longitude": "16.2688797",
+    "name_en": "Austria",
+    "count": 12
+  },
+  {
+    "id": 11,
+    "name_jp": "アゼルバイジャン",
+    "latitude": "40.3629693",
+    "longitude": "49.2736815",
+    "name_en": "Azerbaijan",
+    "count": 5
+  },
+  {
+    "id": 12,
+    "name_jp": "バーレーン",
+    "latitude": "26.2650742",
+    "longitude": "50.6223267",
+    "name_en": "Bahrain",
+    "count": 3
+  },
+  {
+    "id": 13,
+    "name_jp": "バングラデシュ",
+    "latitude": "23.684994",
+    "longitude": "90.356331",
+    "name_en": "Bangladesh",
+    "count": 3
+  },
+  {
+    "id": 14,
+    "name_jp": "バルバドス",
+    "latitude": "13.193887",
+    "longitude": "-59.543198",
+    "name_en": "Barbados",
+    "count": 1
+  },
+  {
+    "id": 15,
+    "name_jp": "ベラルーシ",
+    "latitude": "52.0976214",
+    "longitude": "23.7340503",
+    "name_en": "Belarus",
+    "count": 4
+  },
+  {
+    "id": 16,
+    "name_jp": "ベルギー",
+    "latitude": "50.5257076",
+    "longitude": "4.0621017",
+    "name_en": "Belgium",
+    "count": 16
+  },
+  {
+    "id": 17,
+    "name_jp": "ベリーズ",
+    "latitude": "17.189877",
+    "longitude": "-88.49765",
+    "name_en": "Belize",
+    "count": 1
+  },
+  {
+    "id": 18,
+    "name_jp": "ベナン",
+    "latitude": "10.9681093",
+    "longitude": "2.7779813",
+    "name_en": "Benin",
+    "count": 3
+  },
+  {
+    "id": 19,
+    "name_jp": "ボリビア",
+    "latitude": "-16.290154",
+    "longitude": "-63.588654",
+    "name_en": "Bolivia (Plurinational State of)",
+    "count": 7
+  },
+  {
+    "id": 20,
+    "name_jp": "ボスニア・ヘルツェゴビナ",
+    "latitude": "17.679076",
+    "longitude": "43.915886",
+    "name_en": "Bosnia and Herzegovina",
+    "count": 4
+  },
+  {
+    "id": 21,
+    "name_jp": "ボツワナ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Botswana",
+    "count": 2
+  },
+  {
+    "id": 22,
+    "name_jp": "ブラジル",
+    "latitude": "39.488691",
+    "longitude": "16.3828566",
+    "name_en": "Brazil",
+    "count": 23
+  },
+  {
+    "id": 23,
+    "name_jp": "ブルガリア",
+    "latitude": "42.5047926",
+    "longitude": "27.4626361",
+    "name_en": "Bulgaria",
+    "count": 10
+  },
+  {
+    "id": 24,
+    "name_jp": "ブルキナファソ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Burkina Faso",
+    "count": 3
+  },
+  {
+    "id": 25,
+    "name_jp": "カーボベルデ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Cabo Verde",
+    "count": 1
+  },
+  {
+    "id": 26,
+    "name_jp": "カンボジア",
+    "latitude": "14.1717195",
+    "longitude": "103.6362715",
+    "name_en": "Cambodia",
+    "count": 4
+  },
+  {
+    "id": 27,
+    "name_jp": "カメルーン",
+    "latitude": "6.9181954",
+    "longitude": "12.8054753",
+    "name_en": "Cameroon",
+    "count": 2
+  },
+  {
+    "id": 28,
+    "name_jp": "カナダ",
+    "latitude": "49.0504377",
+    "longitude": "-122.3044697",
+    "name_en": "Canada",
+    "count": 22
+  },
+  {
+    "id": 29,
+    "name_jp": "中央アフリカ",
+    "latitude": "6.4850984",
+    "longitude": "16.1580937",
+    "name_en": "Central African Republic",
+    "count": 2
+  },
+  {
+    "id": 30,
+    "name_jp": "チャド",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Chad",
+    "count": 2
+  },
+  {
+    "id": 31,
+    "name_jp": "チリ",
+    "latitude": "32.715738",
+    "longitude": "-117.1610838",
+    "name_en": "Chile",
+    "count": 7
+  },
+  {
+    "id": 32,
+    "name_jp": "中華人民共和国",
+    "latitude": "35.86166",
+    "longitude": "104.195397",
+    "name_en": "China",
+    "count": 57
+  },
+  {
+    "id": 33,
+    "name_jp": "コロンビア",
+    "latitude": "7.076172",
+    "longitude": "-70.710457",
+    "name_en": "Colombia",
+    "count": 9
+  },
+  {
+    "id": 34,
+    "name_jp": "コンゴ共和国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Congo",
+    "count": 2
+  },
+  {
+    "id": 35,
+    "name_jp": "コスタリカ",
+    "latitude": "10.0159394",
+    "longitude": "-84.2141701",
+    "name_en": "Costa Rica",
+    "count": 4
+  },
+  {
+    "id": 36,
+    "name_jp": "コートジボワール",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Côte d'Ivoire",
+    "count": 5
+  },
+  {
+    "id": 37,
+    "name_jp": "クロアチア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Croatia",
+    "count": 10
+  },
+  {
+    "id": 38,
+    "name_jp": "キューバ",
+    "latitude": "22.4133651",
+    "longitude": "-83.6880257",
+    "name_en": "Cuba",
+    "count": 9
+  },
+  {
+    "id": 39,
+    "name_jp": "キプロス",
+    "latitude": "35.1855659",
+    "longitude": "33.3822764",
+    "name_en": "Cyprus",
+    "count": 3
+  },
+  {
+    "id": 40,
+    "name_jp": "チェコ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Czechia",
+    "count": 17
+  },
+  {
+    "id": 41,
+    "name_jp": "朝鮮民主主義人民共和国",
+    "latitude": "34.606756",
+    "longitude": "119.19371",
+    "name_en": "Democratic People's Republic of Korea",
+    "count": 2
+  },
+  {
+    "id": 42,
+    "name_jp": "コンゴ民主共和国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Democratic Republic of the Congo",
+    "count": 5
+  },
+  {
+    "id": 43,
+    "name_jp": "デンマーク",
+    "latitude": "56.162939",
+    "longitude": "10.203921",
+    "name_en": "Denmark",
+    "count": 11
+  },
+  {
+    "id": 44,
+    "name_jp": "ドミニカ国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Dominica",
+    "count": 1
+  },
+  {
+    "id": 45,
+    "name_jp": "ドミニカ共和国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Dominican Republic",
+    "count": 1
+  },
+  {
+    "id": 46,
+    "name_jp": "エクアドル",
+    "latitude": "-2.8943068",
+    "longitude": "-78.9968344",
+    "name_en": "Ecuador",
+    "count": 5
+  },
+  {
+    "id": 47,
+    "name_jp": "エジプト",
+    "latitude": "24.088938",
+    "longitude": "32.8998293",
+    "name_en": "Egypt",
+    "count": 7
+  },
+  {
+    "id": 48,
+    "name_jp": "エルサルバドル",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "El Salvador",
+    "count": 1
+  },
+  {
+    "id": 49,
+    "name_jp": "エリトリア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Eritrea",
+    "count": 1
+  },
+  {
+    "id": 50,
+    "name_jp": "エストニア",
+    "latitude": "59.3334239",
+    "longitude": "25.2466973",
+    "name_en": "Estonia",
+    "count": 2
+  },
+  {
+    "id": 51,
+    "name_jp": "エチオピア",
+    "latitude": "11.7559388",
+    "longitude": "40.958688",
+    "name_en": "Ethiopia",
+    "count": 11
+  },
+  {
+    "id": 52,
+    "name_jp": "フィジー",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Fiji",
+    "count": 1
+  },
+  {
+    "id": 53,
+    "name_jp": "フィンランド",
+    "latitude": "60.2054911",
+    "longitude": "24.6559001",
+    "name_en": "Finland",
+    "count": 7
+  },
+  {
+    "id": 54,
+    "name_jp": "フランス",
+    "latitude": "43.676647",
+    "longitude": "4.6277769",
+    "name_en": "France",
+    "count": 52
+  },
+  {
+    "id": 55,
+    "name_jp": "ガボン",
+    "latitude": "-0.8844093",
+    "longitude": "12.4380581",
+    "name_en": "Gabon",
+    "count": 2
+  },
+  {
+    "id": 56,
+    "name_jp": "ガンビア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Gambia",
+    "count": 2
+  },
+  {
+    "id": 57,
+    "name_jp": "グルジア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Georgia",
+    "count": 4
+  },
+  {
+    "id": 58,
+    "name_jp": "ドイツ",
+    "latitude": "51.4073375",
+    "longitude": "8.052771",
+    "name_en": "Germany",
+    "count": 52
+  },
+  {
+    "id": 59,
+    "name_jp": "ガーナ",
+    "latitude": "6.7470436",
+    "longitude": "-1.5208624",
+    "name_en": "Ghana",
+    "count": 2
+  },
+  {
+    "id": 60,
+    "name_jp": "ギリシャ",
+    "latitude": "35.5138298",
+    "longitude": "24.0180367",
+    "name_en": "Greece",
+    "count": 19
+  },
+  {
+    "id": 61,
+    "name_jp": "グアテマラ",
+    "latitude": "38.440429",
+    "longitude": "-122.7140548",
+    "name_en": "Guatemala",
+    "count": 4
+  },
+  {
+    "id": 62,
+    "name_jp": "ハイチ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Haiti",
+    "count": 1
+  },
+  {
+    "id": 63,
+    "name_jp": "バチカン市国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Holy See",
+    "count": 2
+  },
+  {
+    "id": 64,
+    "name_jp": "ホンジュラス",
+    "latitude": "-34.7793791",
+    "longitude": "-55.7596225",
+    "name_en": "Honduras",
+    "count": 2
+  },
+  {
+    "id": 65,
+    "name_jp": "ハンガリー",
+    "latitude": "47.2555579",
+    "longitude": "20.5232456",
+    "name_en": "Hungary",
+    "count": 8
+  },
+  {
+    "id": 66,
+    "name_jp": "アイスランド",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Iceland",
+    "count": 3
+  },
+  {
+    "id": 67,
+    "name_jp": "インド",
+    "latitude": "12.9715987",
+    "longitude": "77.5945627",
+    "name_en": "India",
+    "count": 42
+  },
+  {
+    "id": 68,
+    "name_jp": "インドネシア",
+    "latitude": "-3.3194374",
+    "longitude": "103.914399",
+    "name_en": "Indonesia",
+    "count": 10
+  },
+  {
+    "id": 69,
+    "name_jp": "イラン",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Iran (Islamic Republic of)",
+    "count": 27
+  },
+  {
+    "id": 70,
+    "name_jp": "イラク",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Iraq",
+    "count": 6
+  },
+  {
+    "id": 71,
+    "name_jp": "アイルランド",
+    "latitude": "53.2356871",
+    "longitude": "-7.7122229",
+    "name_en": "Ireland",
+    "count": 2
+  },
+  {
+    "id": 72,
+    "name_jp": "イスラエル",
+    "latitude": "31.804381",
+    "longitude": "34.655314",
+    "name_en": "Israel",
+    "count": 9
+  },
+  {
+    "id": 73,
+    "name_jp": "イタリア",
+    "latitude": "44.9007512",
+    "longitude": "8.2064257",
+    "name_en": "Italy",
+    "count": 59
+  },
+  {
+    "id": 74,
+    "name_jp": "ジャマイカ",
+    "latitude": "52.3758916",
+    "longitude": "9.7320104",
+    "name_en": "Jamaica",
+    "count": 1
+  },
+  {
+    "id": 75,
+    "name_jp": "日本",
+    "latitude": "39.7036194",
+    "longitude": "141.1526839",
+    "name_en": "Japan",
+    "count": 25
+  },
+  {
+    "id": 76,
+    "name_jp": "エルサレム (ヨルダンが提案した場所)",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Jerusalem (Site proposed by Jordan)",
+    "count": 1
+  },
+  {
+    "id": 77,
+    "name_jp": "ヨルダン",
+    "latitude": "29.5320522",
+    "longitude": "35.0063209",
+    "name_en": "Jordan",
+    "count": 6
+  },
+  {
+    "id": 78,
+    "name_jp": "カザフスタン",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Kazakhstan",
+    "count": 6
+  },
+  {
+    "id": 79,
+    "name_jp": "ケニア",
+    "latitude": "0.6320551",
+    "longitude": "36.0567202",
+    "name_en": "Kenya",
+    "count": 7
+  },
+  {
+    "id": 80,
+    "name_jp": "キリバス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Kiribati",
+    "count": 1
+  },
+  {
+    "id": 81,
+    "name_jp": "キルギス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Kyrgyzstan",
+    "count": 3
+  },
+  {
+    "id": 82,
+    "name_jp": "ラオス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Lao People's Democratic Republic",
+    "count": 3
+  },
+  {
+    "id": 83,
+    "name_jp": "ラトビア",
+    "latitude": "57.4207878",
+    "longitude": "27.0513491",
+    "name_en": "Latvia",
+    "count": 3
+  },
+  {
+    "id": 84,
+    "name_jp": "レバノン",
+    "latitude": "9.3407352",
+    "longitude": "34.536223",
+    "name_en": "Lebanon",
+    "count": 6
+  },
+  {
+    "id": 85,
+    "name_jp": "リビア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Libya",
+    "count": 5
+  },
+  {
+    "id": 86,
+    "name_jp": "リトアニア",
+    "latitude": "54.3962938",
+    "longitude": "24.045876",
+    "name_en": "Lithuania",
+    "count": 5
+  },
+  {
+    "id": 87,
+    "name_jp": "ルクセンブルク",
+    "latitude": "49.8671784",
+    "longitude": "6.1595633",
+    "name_en": "Luxembourg",
+    "count": 1
+  },
+  {
+    "id": 88,
+    "name_jp": "マダガスカル",
+    "latitude": "-13.771539",
+    "longitude": "49.5279996",
+    "name_en": "Madagascar",
+    "count": 3
+  },
+  {
+    "id": 89,
+    "name_jp": "マラウイ",
+    "latitude": "32.8972246",
+    "longitude": "35.3027226",
+    "name_en": "Malawi",
+    "count": 2
+  },
+  {
+    "id": 90,
+    "name_jp": "マレーシア",
+    "latitude": "21.481291",
+    "longitude": "109.120161",
+    "name_en": "Malaysia",
+    "count": 4
+  },
+  {
+    "id": 91,
+    "name_jp": "マリ",
+    "latitude": "18.4520713",
+    "longitude": "1.4096535",
+    "name_en": "Mali",
+    "count": 4
+  },
+  {
+    "id": 92,
+    "name_jp": "マルタ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Malta",
+    "count": 3
+  },
+  {
+    "id": 93,
+    "name_jp": "マーシャル諸島",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Marshall Islands",
+    "count": 1
+  },
+  {
+    "id": 94,
+    "name_jp": "モーリタニア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Mauritania",
+    "count": 2
+  },
+  {
+    "id": 95,
+    "name_jp": "モーリシャス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Mauritius",
+    "count": 2
+  },
+  {
+    "id": 96,
+    "name_jp": "メキシコ",
+    "latitude": "42.5987263",
+    "longitude": "-5.5670959",
+    "name_en": "Mexico",
+    "count": 35
+  },
+  {
+    "id": 97,
+    "name_jp": "ミクロネシア連邦",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Micronesia (Federated States of)",
+    "count": 1
+  },
+  {
+    "id": 98,
+    "name_jp": "モンゴル",
+    "latitude": "45.5822786",
+    "longitude": "106.7644209",
+    "name_en": "Mongolia",
+    "count": 6
+  },
+  {
+    "id": 99,
+    "name_jp": "モンテネグロ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Montenegro",
+    "count": 4
+  },
+  {
+    "id": 100,
+    "name_jp": "モロッコ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Morocco",
+    "count": 9
+  },
+  {
+    "id": 101,
+    "name_jp": "モザンビーク",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Mozambique",
+    "count": 1
+  },
+  {
+    "id": 102,
+    "name_jp": "ミャンマー",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Myanmar",
+    "count": 2
+  },
+  {
+    "id": 103,
+    "name_jp": "ナミビア",
+    "latitude": "-17.5979291",
+    "longitude": "16.8178377",
+    "name_en": "Namibia",
+    "count": 2
+  },
+  {
+    "id": 104,
+    "name_jp": "ネパール",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Nepal",
+    "count": 4
+  },
+  {
+    "id": 105,
+    "name_jp": "オランダ",
+    "latitude": "52.3507849",
+    "longitude": "5.2647016",
+    "name_en": "Netherlands",
+    "count": 13
+  },
+  {
+    "id": 106,
+    "name_jp": "ニュージーランド",
+    "latitude": "-36.8484597",
+    "longitude": "174.7633315",
+    "name_en": "New Zealand",
+    "count": 3
+  },
+  {
+    "id": 107,
+    "name_jp": "ニカラグア",
+    "latitude": "42.5987263",
+    "longitude": "-5.5670959",
+    "name_en": "Nicaragua",
+    "count": 2
+  },
+  {
+    "id": 108,
+    "name_jp": "ニジェール",
+    "latitude": "16.9741689",
+    "longitude": "7.986535",
+    "name_en": "Niger",
+    "count": 3
+  },
+  {
+    "id": 109,
+    "name_jp": "ナイジェリア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Nigeria",
+    "count": 2
+  },
+  {
+    "id": 110,
+    "name_jp": "ノルウェー",
+    "latitude": "69.8178242",
+    "longitude": "18.7819365",
+    "name_en": "Norway",
+    "count": 8
+  },
+  {
+    "id": 111,
+    "name_jp": "オマーン",
+    "latitude": "23.5880462",
+    "longitude": "58.3828798",
+    "name_en": "Oman",
+    "count": 5
+  },
+  {
+    "id": 112,
+    "name_jp": "パキスタン",
+    "latitude": "34.0149748",
+    "longitude": "71.5804899",
+    "name_en": "Pakistan",
+    "count": 6
+  },
+  {
+    "id": 113,
+    "name_jp": "パラオ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Palau",
+    "count": 1
+  },
+  {
+    "id": 114,
+    "name_jp": "パナマ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Panama",
+    "count": 5
+  },
+  {
+    "id": 115,
+    "name_jp": "パプアニューギニア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Papua New Guinea",
+    "count": 1
+  },
+  {
+    "id": 116,
+    "name_jp": "パラグアイ",
+    "latitude": "-23.1083066",
+    "longitude": "-55.225667",
+    "name_en": "Paraguay",
+    "count": 1
+  },
+  {
+    "id": 117,
+    "name_jp": "ペルー",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Peru",
+    "count": 13
+  },
+  {
+    "id": 118,
+    "name_jp": "フィリピン",
+    "latitude": "7.190708",
+    "longitude": "125.455341",
+    "name_en": "Philippines",
+    "count": 6
+  },
+  {
+    "id": 119,
+    "name_jp": "ポーランド",
+    "latitude": "54.1560613",
+    "longitude": "19.4044897",
+    "name_en": "Poland",
+    "count": 17
+  },
+  {
+    "id": 120,
+    "name_jp": "ポルトガル",
+    "latitude": "41.1579438",
+    "longitude": "-8.6291053",
+    "name_en": "Portugal",
+    "count": 17
+  },
+  {
+    "id": 121,
+    "name_jp": "カタール",
+    "latitude": "25.2854473",
+    "longitude": "51.5310398",
+    "name_en": "Qatar",
+    "count": 1
+  },
+  {
+    "id": 122,
+    "name_jp": "大韓民国",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Republic of Korea",
+    "count": 16
+  },
+  {
+    "id": 123,
+    "name_jp": "ルーマニア",
+    "latitude": "46.0823371",
+    "longitude": "23.5690265",
+    "name_en": "Romania",
+    "count": 9
+  },
+  {
+    "id": 124,
+    "name_jp": "ロシア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Russian Federation",
+    "count": 31
+  },
+  {
+    "id": 125,
+    "name_jp": "ルワンダ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Rwanda",
+    "count": 2
+  },
+  {
+    "id": 126,
+    "name_jp": "セントクリストファー・ネイビス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Saint Kitts and Nevis",
+    "count": 1
+  },
+  {
+    "id": 127,
+    "name_jp": "セントルシア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Saint Lucia",
+    "count": 1
+  },
+  {
+    "id": 128,
+    "name_jp": "サンマリノ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "San Marino",
+    "count": 1
+  },
+  {
+    "id": 129,
+    "name_jp": "サウジアラビア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Saudi Arabia",
+    "count": 7
+  },
+  {
+    "id": 130,
+    "name_jp": "セネガル",
+    "latitude": "46.0036778",
+    "longitude": "8.951052",
+    "name_en": "Senegal",
+    "count": 7
+  },
+  {
+    "id": 131,
+    "name_jp": "セルビア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Serbia",
+    "count": 5
+  },
+  {
+    "id": 132,
+    "name_jp": "セーシェル",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Seychelles",
+    "count": 2
+  },
+  {
+    "id": 133,
+    "name_jp": "シンガポール",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Singapore",
+    "count": 1
+  },
+  {
+    "id": 134,
+    "name_jp": "スロバキア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Slovakia",
+    "count": 8
+  },
+  {
+    "id": 135,
+    "name_jp": "スロベニア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Slovenia",
+    "count": 5
+  },
+  {
+    "id": 136,
+    "name_jp": "ソロモン諸島",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Solomon Islands",
+    "count": 1
+  },
+  {
+    "id": 137,
+    "name_jp": "南アフリカ",
+    "latitude": "51.4987962",
+    "longitude": "3.610998",
+    "name_en": "South Africa",
+    "count": 10
+  },
+  {
+    "id": 138,
+    "name_jp": "スペイン",
+    "latitude": "37.8881751",
+    "longitude": "-4.7793835",
+    "name_en": "Spain",
+    "count": 50
+  },
+  {
+    "id": 139,
+    "name_jp": "スリランカ",
+    "latitude": "7.0873101",
+    "longitude": "80.0143656",
+    "name_en": "Sri Lanka",
+    "count": 8
+  },
+  {
+    "id": 140,
+    "name_jp": "パレスチナ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "State of Palestine",
+    "count": 4
+  },
+  {
+    "id": 141,
+    "name_jp": "スーダン",
+    "latitude": "14.3782747",
+    "longitude": "24.9042208",
+    "name_en": "Sudan",
+    "count": 3
+  },
+  {
+    "id": 142,
+    "name_jp": "スリナム",
+    "latitude": "4.7710247",
+    "longitude": "-55.0493375",
+    "name_en": "Suriname",
+    "count": 3
+  },
+  {
+    "id": 143,
+    "name_jp": "スウェーデン",
+    "latitude": "66.8309216",
+    "longitude": "20.3991966",
+    "name_en": "Sweden",
+    "count": 15
+  },
+  {
+    "id": 144,
+    "name_jp": "スイス",
+    "latitude": "47.366481",
+    "longitude": "9.3000916",
+    "name_en": "Switzerland",
+    "count": 13
+  },
+  {
+    "id": 145,
+    "name_jp": "シリア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Syrian Arab Republic",
+    "count": 6
+  },
+  {
+    "id": 146,
+    "name_jp": "タジキスタン",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Tajikistan",
+    "count": 4
+  },
+  {
+    "id": 147,
+    "name_jp": "タイ",
+    "latitude": "14.5896054",
+    "longitude": "100.455052",
+    "name_en": "Thailand",
+    "count": 7
+  },
+  {
+    "id": 148,
+    "name_jp": "チュニジア",
+    "latitude": "36.7333193",
+    "longitude": "9.1843676",
+    "name_en": "Tunisia",
+    "count": 9
+  },
+  {
+    "id": 149,
+    "name_jp": "トルコ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Türkiye",
+    "count": 21
+  },
+  {
+    "id": 150,
+    "name_jp": "トルクメニスタン",
+    "latitude": "38.4894305",
+    "longitude": "47.0683575",
+    "name_en": "Turkmenistan",
+    "count": 5
+  },
+  {
+    "id": 151,
+    "name_jp": "ウガンダ",
+    "latitude": "0.707531",
+    "longitude": "30.0636349",
+    "name_en": "Uganda",
+    "count": 3
+  },
+  {
+    "id": 152,
+    "name_jp": "ウクライナ",
+    "latitude": "50.4501",
+    "longitude": "30.5234",
+    "name_en": "Ukraine",
+    "count": 8
+  },
+  {
+    "id": 153,
+    "name_jp": "アラブ首長国連邦",
+    "latitude": "24.453884",
+    "longitude": "54.3773438",
+    "name_en": "United Arab Emirates",
+    "count": 1
+  },
+  {
+    "id": 154,
+    "name_jp": "イギリス",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "United Kingdom of Great Britain and Northern Ireland",
+    "count": 33
+  },
+  {
+    "id": 155,
+    "name_jp": "タンザニア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "United Republic of Tanzania",
+    "count": 7
+  },
+  {
+    "id": 156,
+    "name_jp": "アメリカ合衆国",
+    "latitude": "64.8377778",
+    "longitude": "-147.7163889",
+    "name_en": "United States of America",
+    "count": 25
+  },
+  {
+    "id": 157,
+    "name_jp": "ウルグアイ",
+    "latitude": "37.3382082",
+    "longitude": "-121.8863286",
+    "name_en": "Uruguay",
+    "count": 3
+  },
+  {
+    "id": 158,
+    "name_jp": "ウズベキスタン",
+    "latitude": "39.7680827",
+    "longitude": "64.4555769",
+    "name_en": "Uzbekistan",
+    "count": 7
+  },
+  {
+    "id": 159,
+    "name_jp": "バヌアツ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Vanuatu",
+    "count": 1
+  },
+  {
+    "id": 160,
+    "name_jp": "ベネズエラ",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Venezuela (Bolivarian Republic of)",
+    "count": 3
+  },
+  {
+    "id": 161,
+    "name_jp": "ベトナム",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Viet Nam",
+    "count": 8
+  },
+  {
+    "id": 162,
+    "name_jp": "イエメン",
+    "latitude": "15.3694451",
+    "longitude": "44.1910066",
+    "name_en": "Yemen",
+    "count": 5
+  },
+  {
+    "id": 163,
+    "name_jp": "ジンバブエ",
+    "latitude": "-18.5331566",
+    "longitude": "27.5495846",
+    "name_en": "Zimbabwe",
+    "count": 5
+  },
+  {
+    "id": 164,
+    "name_jp": "クロアチア",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "North Macedonia",
+    "count": 2
+  },
+  {
+    "id": 165,
+    "name_jp": "ノルウェー",
+    "latitude": "",
+    "longitude": "",
+    "name_en": "Republic of Moldova",
+    "count": 1
+  },
+  {
+    "id": 166,
+    "name_jp": "トーゴ",
+    "latitude": "-7.3237714",
+    "longitude": "38.8205454",
+    "name_en": "Togo",
+    "count": 1
+  },
+  {
+    "id": 167,
+    "name_jp": "ギニア",
+    "latitude": "7.9541144",
+    "longitude": "-8.7481167",
+    "name_en": "Guinea",
+    "count": 1
+  },
+  {
+    "id": 168,
+    "name_jp": "レソト",
+    "latitude": "37.568694",
+    "longitude": "-84.2963223",
+    "name_en": "Lesotho",
+    "count": 1
+  },
+  {
+    "id": 169,
+    "name_jp": "ザンビア",
+    "latitude": "-11.564831",
+    "longitude": "29.0459927",
+    "name_en": "Zambia",
+    "count": 1
+  }
+]
