@@ -9,30 +9,22 @@ import uView from '@/uni_modules/uview-ui'
 // 引入gmap-vue
 import GmapVue from 'gmap-vue'
 import mixin from './common/mixin'
-
-
-
+import google_map_config_jp from './common/google_map_config_jp'
+import google_map_config_en from './common/google_map_config_en'
+import google_map_config_cn from './common/google_map_config_cn'
+let localLanguage = uni.getStorageSync('local_lang');
+let google_map_config_val = google_map_config_jp;
+if (localLanguage === 'jp') {
+    google_map_config_val = google_map_config_jp;
+} else if (localLanguage === 'en') {
+    google_map_config_val = google_map_config_en;
+} else if (localLanguage === 'cn') {
+    google_map_config_val = google_map_config_cn;
+} else {
+    google_map_config_val = google_map_config_jp;
+}
 Vue.use(GmapVue, {
-    load: {
-        // [REQUIRED] This is the unique required value by Google Maps API
-        key: 'AIzaSyD-5geYjqC-x7bDmJoLHLMLTxQSlbBhaz0',
-        // [OPTIONAL] This is required if you use the Autocomplete plugin
-        // OR: libraries: 'places,drawing'
-        // OR: libraries: 'places,drawing,visualization'
-        // (as you require)
-        libraries: 'marker',
-
-        // [OPTIONAL] If you want to set the version, you can do so:
-        v: 'beta',
-
-        // This option was added on v3.0.0 but will be removed in the next major release.
-        // If you already have an script tag that loads Google Maps API and you want to use it set you callback
-        // here and our callback `GoogleMapsCallback` will execute your custom callback at the end; it must attached
-        // to the `window` object, is the only requirement.
-        customCallback: 'initMap',
-        regin: 'JP',
-        language: 'ja'
-    },
+    load: google_map_config_val,
 
     // [OPTIONAL] If you intend to programmatically custom event listener code
     // (e.g. `this.$refs.gmap.$on('zoom_changed', someFunc)`)

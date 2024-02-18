@@ -4,12 +4,7 @@
     <!-- Tab吸顶 -->
     <u-sticky style="top: 0">
       <view class="head-tab">
-        <u-tabs
-            :list="tabList"
-            lineColor="#72CD18"
-            lineWidth="46"
-            :current="tabIndex"
-            @change="clickTab"
+        <u-tabs :list="tabList" lineColor="#72CD18" lineWidth="46" :current="tabIndex" @change="clickTab"
             :activeStyle="{
               color: '#1C3B53',
               fontWeight: 'bold',
@@ -170,11 +165,6 @@ export default {
     return {
       mobileDeviceShow: false,
       aboutPopupShow: false,
-      tabList: [
-        {name: '世界'},
-        {name: 'チェックイン'},
-        {name: 'リスト'}
-      ],
     };
   },
   props: {
@@ -191,11 +181,20 @@ export default {
       default: () => {
         return {}
       }
+    },
+    tabList: {
+      type: Array,
+      default: () => {
+        return []
+      }
     }
   },
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
+    },
+    currentLanguage() {
+      return this.$store.state.currentLanguage;
     }
   },
   methods: {

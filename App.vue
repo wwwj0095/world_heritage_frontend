@@ -6,6 +6,7 @@
       if (isLogin) {
         this.$store.commit('login');
       }
+      this.$store.commit('setLocalLanguage', 'cn');
 		},
 		onShow: function() {
 

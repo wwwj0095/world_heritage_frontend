@@ -1,0 +1,8 @@
+{
+  "key": "AIzaSyD-5geYjqC-x7bDmJoLHLMLTxQSlbBhaz0",
+  "libraries": "marker",
+  "v": "beta",
+  "customCallback": "initMap",
+  "regin": "JP",
+  "language": "ja"
+}

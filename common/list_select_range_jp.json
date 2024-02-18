@@ -1,0 +1,30 @@
+[
+  {
+    "value": "All",
+    "text": "全て"
+  },
+  {
+    "value": "Europe",
+    "text": "ヨーロッパ"
+  },
+  {
+    "value": "Asia",
+    "text": "アジア"
+  },
+  {
+    "value": "Oceania",
+    "text": "オセアニア"
+  },
+  {
+    "value": "Africa",
+    "text": "アフリカ"
+  },
+  {
+    "value": "NA/CA",
+    "text": "北米・中米"
+  },
+  {
+    "value": "SA",
+    "text": "南米"
+  }
+]

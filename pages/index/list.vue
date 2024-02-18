@@ -2,8 +2,19 @@
   <view>
 
     <!-- 顶部个人中心组件 -->
-    <tab-list v-if="deviceType === 'phone'" :user-info="userInfo" :tab-index="tabIndex" :show-about="false" ref="tabList"></tab-list>
-    <pc-tab-list v-else :user-info="userInfo" :tab-index="tabIndex" :show-about="false"></pc-tab-list>
+    <tab-list
+        v-if="deviceType === 'phone'"
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        ref="tabList"
+        :tab-list="tabListData"></tab-list>
+    <pc-tab-list
+        v-else
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        :tab-list="tabListData"></pc-tab-list>
     <!-- 顶部个人中心组件 -->
     <!-- 头部内容 -->
     <view style="padding: 0 0.65rem">
@@ -18,7 +29,7 @@
             v-model="value"
             :clear="false"
             :localdata="range"
-            placeholder="エリア：全て"
+            :placeholder="selectRangePlaceholder"
             @change="continentChange"
         ></uni-data-select>
       </view>
@@ -414,6 +425,12 @@
 import {getCheckInInfo, getContinent, getUserInfo} from '@/util/request/api.js';
 import heritageList from '@/common/heritage_list.json';
 import {Canvas, Node} from '@/pages/components/html2canvas/index';
+import tab_list_jp from "@/common/tab_list_jp.json";
+import tab_list_en from "@/common/tab_list_en.json";
+import tab_list_cn from "@/common/tab_list_cn.json";
+import list_select_range_cn from "@/common/list_select_range_cn.json";
+import list_select_range_en from "@/common/list_select_range_en.json";
+import list_select_range_jp from "@/common/list_select_range_jp.json";
 
 export default {
   data() {
@@ -440,6 +457,8 @@ export default {
       selectedHeritageCount: 0,
       selectedHeritageList: [],
       scrollTop: 0,
+      tabListData: [],
+      selectRangePlaceholder: '',
       countryHeritageList: [],
       // 已选中的数据Id集合
       selectCheckedIds: [],
@@ -483,13 +502,26 @@ export default {
     this.deviceType = systemInfo.deviceType
     let device_id   = systemInfo.deviceId
     if (options.token && !this.isLogin) {
-      // 再判断是否是同一个设备
-      // if (device_id === options.device_id) {
-        // 代表登录成功
-        uni.setStorageSync('auth_token', options.token);
-        this.getUserInfo(options.login_type);
-      // }
+      // 代表登录成功
+      uni.setStorageSync('auth_token', options.token);
+      this.getUserInfo(options.login_type);
     }
+
+    let localLanguage = uni.getStorageSync('local_lang');
+    if (localLanguage === 'jp') {
+      this.tabListData = tab_list_jp
+      this.range = list_select_range_jp
+      this.selectRangePlaceholder= 'エリア：全て'
+    } else if (localLanguage === 'en') {
+      this.tabListData = tab_list_en
+      this.range = list_select_range_en
+      this.selectRangePlaceholder= 'Area: All'
+    } else {
+      this.tabListData = tab_list_cn
+      this.range = list_select_range_cn
+      this.selectRangePlaceholder= '地区：全部'
+    }
+
     let that = this
     // uni.$on('tabListIndex',function(data){
     //   if (that.countryHeritageList[data.curIndex] === undefined) {
@@ -526,8 +558,8 @@ export default {
       this.userInfo = uni.getStorageSync('cur_user');
     }
     this.genStateBgImage(372, true)
-    this.getHeritageContinent()
     this.getHeritageList()
+    // this.getHeritageContinent()
   },
   methods: {
     eventHandler(e) {
@@ -668,7 +700,7 @@ export default {
     // 获取遗产列表
     getHeritageList() {
       // 直接获取本地数据
-      this.countryHeritageList = heritageList
+      // this.countryHeritageList = heritageList
       // 通过接口去获取数据
       // this.countryHeritageList = heritageList
       // uni.showLoading({

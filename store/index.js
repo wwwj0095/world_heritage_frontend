@@ -6,6 +6,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state:{
         isLogin: false,
+        currentLanguage: uni.getStorageSync('local_lang') || 'en'
     },
     mutations: {
         login(state, response) {
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
         refreshToken(state, token) {
             uni.setStorageSync('auth_token', token);
         },
+        setLocalLanguage(state, lang) {
+            uni.setStorageSync('local_lang', lang);
+        }
     },
     actions: {
         notLogin({commit}) {

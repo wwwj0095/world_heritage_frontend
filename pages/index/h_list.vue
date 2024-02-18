@@ -2,8 +2,18 @@
   <view>
 
     <!-- 顶部个人中心组件 -->
-    <tab-list v-if="deviceType === 'phone'" :user-info="userInfo" :tab-index="tabIndex" :show-about="false"></tab-list>
-    <pc-tab-list v-else :user-info="userInfo" :tab-index="tabIndex" :show-about="false"></pc-tab-list>
+    <tab-list
+        v-if="deviceType === 'phone'"
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        :tab-list="tabListData"></tab-list>
+    <pc-tab-list
+        v-else
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        :tab-list="tabListData"></pc-tab-list>
     <!-- 顶部个人中心组件 -->
 
     <!-- 头部内容 -->
@@ -11,7 +21,7 @@
 
       <!-- 搜索区域 -->
       <u-search
-          placeholder="検索キーワード"
+          :placeholder="searchPlaceholder"
           shape="square"
           :showAction="false"
           v-model="listQuery.keyword"
@@ -28,7 +38,7 @@
                   v-model="listQuery.country"
                   :clear="true"
                   :localdata="countrySelectData"
-                  placeholder="国家：全て"
+                  :placeholder="countrySelectPlaceholder"
                   @change="countrySelectDataChange"
               ></uni-data-select>
             </view>
@@ -43,7 +53,7 @@
                   v-model="listQuery.category"
                   :clear="true"
                   :localdata="categorySelectData"
-                  placeholder="基準：全て"
+                  :placeholder="categorySelectPlaceholder"
                   @change="categorySelectDataChange"
               ></uni-data-select>
             </view>
@@ -110,7 +120,15 @@
 <script>
 import {getMyCheckInHeritage, getHeritageCategory, getHeritageCountry, getUserInfo, getAllHeritage} from '@/util/request/api.js';
 import heritageList from '@/common/h_list.json';
-
+import categoryJP from '@/common/heritage_category_jp.json'
+import categoryEN from '@/common/heritage_category_en.json'
+import categoryCN from '@/common/heritage_category_cn.json'
+import heritageCountryJP from '@/common/heritage_country_jp.json'
+import heritageCountryEN from '@/common/heritage_country_en.json'
+import heritageCountryCN from '@/common/heritage_country_cn.json'
+import tab_list_cn from "@/common/tab_list_cn";
+import tab_list_en from "@/common/tab_list_en";
+import tab_list_jp from "@/common/tab_list_jp";
 export default {
   data() {
     return {
@@ -123,10 +141,12 @@ export default {
       countrySelectData: [
         {value: 0, text: '国家：全て'}
       ],
-      categorySelectData: [
-        {value: 0, text: '基準：全て'}
-      ],
+      countrySelectPlaceholder: '国家：全て',
+      categorySelectData: [],
+      categorySelectPlaceholder: '基準：全て',
+      searchPlaceholder: '検索キーワード',
       scrollTop: 0,
+      tabListData: [],
       old: {
         scrollTop: 0,
       },
@@ -180,12 +200,38 @@ export default {
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
-    this.countryHeritageList = heritageList.heritage_list
+    // this.countryHeritageList = heritageList.heritage_list
+
+    let localLanguage = uni.getStorageSync('local_lang');
+    if (localLanguage === 'jp') {
+      this.categorySelectData = categoryJP
+      this.countrySelectData  = heritageCountryJP
+      this.countrySelectPlaceholder = '国家：全て'
+      this.categorySelectPlaceholder = '基準：全て'
+      this.searchPlaceholder = '検索キーワード'
+      this.tabListData = tab_list_jp
+    } else if (localLanguage === 'en') {
+      this.categorySelectData = categoryEN
+      this.countrySelectData  = heritageCountryEN
+      this.countrySelectPlaceholder = 'Country: All'
+      this.categorySelectPlaceholder = 'Category: All'
+      this.searchPlaceholder = 'Search Keyword'
+      this.tabListData = tab_list_en
+    } else {
+      this.categorySelectData = categoryCN
+      this.countrySelectData  = heritageCountryCN
+      this.countrySelectPlaceholder = '国家：全部'
+      this.categorySelectPlaceholder = '分类：全部'
+      this.searchPlaceholder = '搜索关键字'
+      this.tabListData = tab_list_cn
+    }
+
+    // TODO 以下这部分注释掉，因为现在直接获取本地的数据，无需再请求接口
     // this.getHeritageList()
     // 获取遗产分类列表
-    this.getHeritageCategoryList()
+    // this.getHeritageCategoryList()
     // 获取遗产国家列表
-    this.getHeritageCountryList()
+    // this.getHeritageCountryList()
   },
   methods: {
     // 获取遗产的列表

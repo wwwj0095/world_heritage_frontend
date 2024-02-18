@@ -6,8 +6,19 @@
     <!-- 通知组件 -->
 
     <!-- 顶部个人中心组件 -->
-    <tab-list v-if="deviceType === 'phone'" :user-info="userInfo" :tab-index="tabIndex" :show-about="true" ref="tabList"></tab-list>
-    <pc-tab-list v-else :user-info="userInfo" :tab-index="tabIndex" :show-about="true"
+    <tab-list
+        v-if="deviceType === 'phone'"
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="true"
+        ref="tabList"
+        :tab-list="tabListData"></tab-list>
+    <pc-tab-list
+        v-else
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="true"
+        :tab-list="tabListData"
                  style="position: fixed; top: 0; background: rgba(255, 255, 255, 0.70);   flex-shrink: 0;">
 
     </pc-tab-list>
@@ -65,6 +76,9 @@ import {
   getAllHeritage,
   getHeritageByLocation
 } from '@/util/request/api.js';
+import tab_list_en from "@/common/tab_list_en.json";
+import tab_list_jp from "@/common/tab_list_jp.json";
+import tab_list_cn from "@/common/tab_list_cn.json";
 export default {
   data() {
     return {
@@ -84,11 +98,7 @@ export default {
         width: '100%',
         height: '650px',
       },
-      tabList: [
-        {name: '世界'},
-        {name: 'チェックイン'},
-        {name: 'リスト'}
-      ],
+      tabListData: [],
       userCheckInTotal: 0,
       heritageTotal: 0,
       styles: [
@@ -176,6 +186,14 @@ export default {
         uni.setStorageSync('auth_token', options.token);
         this.getUserInfo(options.login_type);
       // }
+    }
+    let localLanguage = uni.getStorageSync('local_lang');
+    if (localLanguage === 'jp') {
+      this.tabListData = tab_list_jp
+    } else if (localLanguage === 'en') {
+      this.tabListData = tab_list_en
+    } else {
+      this.tabListData = tab_list_cn
     }
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');

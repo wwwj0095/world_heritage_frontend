@@ -169,11 +169,6 @@ export default {
     return {
       PCDeviceShow: false,
       aboutPopupShow: false,
-      tabList: [
-        {name: '世界'},
-        {name: 'チェックイン'},
-        {name: 'リスト'}
-      ],
     };
   },
   props: {
@@ -193,6 +188,12 @@ export default {
       type: Object,
       default: () => {
         return {}
+      }
+    },
+    tabList: {
+      type: Array,
+      default: () => {
+        return []
       }
     }
   },

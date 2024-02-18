@@ -2,8 +2,18 @@
   <view>
 
     <!-- 顶部个人中心组件 -->
-    <tab-list v-if="deviceType === 'phone'" :user-info="userInfo" :tab-index="tabIndex" :show-about="false"></tab-list>
-    <pc-tab-list v-else :user-info="userInfo" :tab-index="tabIndex" :show-about="false"></pc-tab-list>
+    <tab-list
+        v-if="deviceType === 'phone'"
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        :tab-list="tabListData"></tab-list>
+    <pc-tab-list
+        v-else
+        :user-info="userInfo"
+        :tab-index="tabIndex"
+        :show-about="false"
+        :tab-list="tabListData"></pc-tab-list>
     <!-- 顶部个人中心组件 -->
 
     <!-- 头部内容 -->
@@ -195,6 +205,9 @@
 
 <script>
 import {getMyCheckInHeritage, getHeritageCategory, getHeritageCountry, getUserInfo} from '@/util/request/api.js';
+import tab_list_jp from "@/common/tab_list_jp.json";
+import tab_list_en from "@/common/tab_list_en.json";
+import tab_list_cn from "@/common/tab_list_cn.json";
 
 export default {
   data() {
@@ -210,6 +223,7 @@ export default {
       categorySelectData: [
         {value: 0, text: '基準：全て'}
       ],
+      tabListData: [],
       // 已选中的数据
       selectCheckedIds: [],
       userInfo: {
@@ -250,6 +264,16 @@ export default {
       // 获取CheckIn遗产列表
       this.getCheckInHeritageList()
     }
+    let localLanguage = uni.getStorageSync('local_lang');
+    if (localLanguage === 'jp') {
+      this.tabListData = tab_list_jp
+    } else if (localLanguage === 'en') {
+      this.tabListData = tab_list_en
+    } else {
+      this.tabListData = tab_list_cn
+    }
+
+
     // 获取遗产分类列表
     this.getHeritageCategoryList()
     // 获取遗产国家列表
