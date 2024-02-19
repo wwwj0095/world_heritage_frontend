@@ -38,113 +38,124 @@
     <!-- 头部内容 -->
 
     <!-- 核心内容区域 -->
-    <view v-if="deviceType === 'phone'" class="list-area" style="margin-top: 10px;padding: 0 0.65rem">
-      <u-index-list ref="uIndexListRef" :index-list="indexList" :custom-nav-height="100">
-        <template v-for="(countryHeritages, countryHeritageIndex) in countryHeritageList">
-          <u-index-item>
-            <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
-              <u-index-anchor :key="countryIndex" :id="countryIndex" :text="indexList[countryHeritageIndex]" style="display:none;"></u-index-anchor>
-              <u-row>
-                <u-col span="9">
-                  <view style="display: flex; justify-content: space-between; padding: 0 0 0 20px;">
-                    <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
-                    <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
-                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1"></u--text>
-                  </view>
-                </u-col>
-                <u-col span="3">
-                  <view style="font-size: 12px; color: #1C3B53; margin-left: 100rpx;">
-                    <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.heritages.length }}</span>
-                  </view>
-                </u-col>
-              </u-row>
-              <u-grid :border="false" col="2">
-                <u-grid-item
-                    v-for="(heritageItem, heritageIndex) in country.heritages"
-                    :key="heritageIndex"
-                    :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
-                    style="height: 130px;justify-content: normal; padding: 10px 20px; margin: 3px 3px; width: 48%;  position: relative;"
-                    @click="heritageClick(heritageItem, heritageIndex, countryIndex, countryHeritageIndex)">
-                  <view>
-                    <u--image :showLoading="true" :src="heritageItem.cover_img" width="152" height="70px" style="text-align: center"></u--image>
-                    <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="position: absolute; right: 22px; top: 13px">
-                      <circle cx="8" cy="8" r="8" fill="#A57AED"/>
-                      <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
-                    </svg>
+    <view v-if="deviceType === 'phone'" class="list-area" style="margin-top: 10px;">
 
-                    <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg"  style="position: absolute; right: 22px; top: 13px">
-                      <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
-                    </svg>
+      <scroll-view
+          :scroll-top="scrollTop"
+          scroll-y="true"
+          class="scroll-Y"
+          :style="{
+				  maxHeight: $u.addUnit(scrollViewHeight)
+			    }"
+          @scrolltolower="scrolltolower">
+        <view v-for="(country, countryIndex) in countryHeritageList">
+          <u-row>
+            <u-col span="9">
+              <view style="display: flex; padding: 0 0 0 11px;">
+                <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
+                <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
+                <u--text v-if="currentLanguage === 'jp'" :text="country.name_jp" lines="2" size="13px" color="#1C3B53"></u--text>
+                <u--text v-else-if="currentLanguage === 'en'" :text="country.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
+                <u--text v-else :text="country.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
+              </view>
+            </u-col>
+            <u-col span="3">
+              <view style="font-size: 12px; color: #1C3B53; margin-left: 100rpx;">
+                <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.heritages.length }}</span>
+              </view>
+            </u-col>
+          </u-row>
+          <u-grid :border="false" col="2">
+            <u-grid-item
+                v-for="(heritageItem, heritageIndex) in country.heritages"
+                :key="heritageIndex"
+                :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
+                style="height: 130px;justify-content: normal; padding: 10px; margin: 3px 3px; width: 48%;  position: relative;"
+                @click="heritageClick(heritageItem, heritageIndex, countryIndex)">
+              <view>
+                <u--image :showLoading="true" :src="heritageItem.cover_img" width="178" height="70px" style="text-align: center"></u--image>
+                <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                  <circle cx="8" cy="8" r="8" fill="#A57AED"/>
+                  <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
+                </svg>
 
-                    <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"  style="position: absolute; right: 22px; top: 13px">
-                      <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
-                      <circle cx="8" cy="5" r="2" fill="white"/>
-                      <circle cx="5" cy="10" r="2" fill="white"/>
-                      <circle cx="11" cy="10" r="2" fill="white"/>
-                    </svg>
+                <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                  <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
+                </svg>
 
-                    <u--text :text="heritageItem.name_jp" size="14" :lines="2"></u--text>
-                  </view>
-                </u-grid-item>
-              </u-grid>
-            </view>
-          </u-index-item>
-        </template>
-      </u-index-list>
+                <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                  <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
+                  <circle cx="8" cy="5" r="2" fill="white"/>
+                  <circle cx="5" cy="10" r="2" fill="white"/>
+                  <circle cx="11" cy="10" r="2" fill="white"/>
+                </svg>
+
+                <u--text v-if="currentLanguage === 'jp'" :text="heritageItem.name_jp" size="12" :lines="2"></u--text>
+                <u--text v-else-if="currentLanguage === 'en'" :text="heritageItem.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
+                <u--text v-else :text="heritageItem.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
+              </view>
+            </u-grid-item>
+          </u-grid>
+        </view>
+      </scroll-view>
     </view>
-    <view v-else class="list-area" style="margin-top: 10px;padding: 0 0.65rem">
-      <u-index-list :index-list="indexList" :custom-nav-height="100">
-        <template v-for="(countryHeritages, countryHeritageIndex) in countryHeritageList">
-          <u-index-item>
-            <view v-for="(country, countryIndex) in countryHeritages" style="margin-top: 10px;">
-              <u-index-anchor :text="indexList[countryHeritageIndex]" style="display:none;"></u-index-anchor>
-              <u-row>
-                <u-col span="8">
-                  <view>
-                    <u--text color="#1C3B53" :text="`${country.name_en} / ${country.name_jp}`" size="12" :lines="1" style="padding: 0 1rem"></u--text>
-                  </view>
-                </u-col>
-                <u-col span="4">
-                  <view>
-                    <u--text color="#1C3B53" align="right" :text="`${country.selected_count ? country.selected_count : 0}/ ${country.heritages.length}`" size="12" :lines="1" style="margin-right: 40px; margin-left: -23px"></u--text>
-                  </view>
-                </u-col>
-              </u-row>
-              <u-grid :border="false" col="6">
-                <u-grid-item
-                    v-for="(heritageItem, heritageIndex) in country.heritages"
-                    :key="heritageIndex"
-                    :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
-                    style="height: 168px;justify-content: normal; padding: 0.5rem 1rem; margin: 3px 3px;  position: relative;"
-                    @click="heritageClick(heritageItem, heritageIndex, countryIndex, countryHeritageIndex)">
-                  <view style="position: relative;">
-                    <u--image :showLoading="true" :src="heritageItem.cover_img" width="152" height="70px" style="text-align: center"></u--image>
-                    <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"  style="position: absolute; right: 15rpx; top: 10rpx">
-                      <circle cx="8" cy="8" r="8" fill="#A57AED"/>
-                      <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
-                    </svg>
+    <view v-else class="list-area" style="margin-top: 10px; padding: 0 60px">
+      <scroll-view
+          :scroll-top="scrollTop"
+          scroll-y="true"
+          class="scroll-Y">
+        <view v-for="(country, countryIndex) in countryHeritageList">
+          <u-row>
+            <u-col span="8">
+              <view>
+                <view style="display: flex;">
+                  <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
+                  <i v-else :class="`em em-flag-${country.iso_code}`" aria-role="presentation" style="height: 30rpx; width: 35rpx; margin-right: 15rpx;"></i>
+                  <u--text v-if="currentLanguage === 'jp'" :text="country.name_jp" lines="2" size="13px" color="#1C3B53"></u--text>
+                  <u--text v-else-if="currentLanguage === 'en'" :text="country.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
+                  <u--text v-else :text="country.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
+                </view>
+              </view>
+            </u-col>
+            <u-col span="4">
+              <view>
+                <u--text color="#1C3B53" align="right" :text="`${country.selected_count ? country.selected_count : 0}/ ${country.heritages.length}`" size="12" :lines="1" style="margin-right: 40px; margin-left: -23px"></u--text>
+              </view>
+            </u-col>
+          </u-row>
+          <u-grid :border="false" col="6">
+            <u-grid-item
+                v-for="(heritageItem, heritageIndex) in country.heritages"
+                :key="heritageIndex"
+                :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
+                style="height: 168px; justify-content: normal; margin: 3px 3px;  position: relative;"
+                @click="heritageClick(heritageItem, heritageIndex, countryIndex)">
+              <view style="position: relative;">
+                <u--image :showLoading="true" :src="heritageItem.cover_img" width="250" height="100px" style="text-align: center"></u--image>
+                <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                  <circle cx="8" cy="8" r="8" fill="#A57AED"/>
+                  <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
+                </svg>
 
-                    <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg"   style="position: absolute; right: 15rpx; top: 10rpx">
-                      <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
-                      <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
-                    </svg>
+                <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                  <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
+                </svg>
 
-                    <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"  style="position: absolute; right: 15rpx; top: 10rpx">
-                      <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
-                      <circle cx="8" cy="5" r="2" fill="white"/>
-                      <circle cx="5" cy="10" r="2" fill="white"/>
-                      <circle cx="11" cy="10" r="2" fill="white"/>
-                    </svg>
+                <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                  <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
+                  <circle cx="8" cy="5" r="2" fill="white"/>
+                  <circle cx="5" cy="10" r="2" fill="white"/>
+                  <circle cx="11" cy="10" r="2" fill="white"/>
+                </svg>
 
-                    <u--text :text="heritageItem.name_jp" size="14" :lines="3"></u--text>
-                  </view>
-                </u-grid-item>
-              </u-grid>
-            </view>
-          </u-index-item>
-        </template>
-      </u-index-list>
+                <u--text :text="heritageItem.name_jp" size="12" :lines="3"></u--text>
+              </view>
+            </u-grid-item>
+          </u-grid>
+        </view>
+      </scroll-view>
     </view>
     <!-- 核心内容区域 -->
 
@@ -423,7 +434,6 @@
 
 <script>
 import {getCheckInInfo, getContinent, getUserInfo} from '@/util/request/api.js';
-import heritageList from '@/common/heritage_list.json';
 import {Canvas, Node} from '@/pages/components/html2canvas/index';
 import tab_list_jp from "@/common/tab_list_jp.json";
 import tab_list_en from "@/common/tab_list_en.json";
@@ -431,6 +441,7 @@ import tab_list_cn from "@/common/tab_list_cn.json";
 import list_select_range_cn from "@/common/list_select_range_cn.json";
 import list_select_range_en from "@/common/list_select_range_en.json";
 import list_select_range_jp from "@/common/list_select_range_jp.json";
+import country_heritage_list from "@/common/country_heritage_list.json";
 
 export default {
   data() {
@@ -449,6 +460,7 @@ export default {
       EuropeCount: 0,
       AfricaCount: 0,
       AsiaCount: 0,
+      scrollViewHeight: 0,
       NorthAmericaCount: 0,
       OceaniaCount: 0,
       shareImgUrl: '',
@@ -460,6 +472,9 @@ export default {
       tabListData: [],
       selectRangePlaceholder: '',
       countryHeritageList: [],
+      countryHeritageListPage: 1,
+      countryHeritageListLimit: 10,
+      currentLanguage: 'cn',
       // 已选中的数据Id集合
       selectCheckedIds: [],
       // 已选中的数据集合，该集合用于处理页面上的边框
@@ -507,12 +522,12 @@ export default {
       this.getUserInfo(options.login_type);
     }
 
-    let localLanguage = uni.getStorageSync('local_lang');
-    if (localLanguage === 'jp') {
+    this.currentLanguage = uni.getStorageSync('local_lang');
+    if (this.currentLanguage === 'jp') {
       this.tabListData = tab_list_jp
       this.range = list_select_range_jp
       this.selectRangePlaceholder= 'エリア：全て'
-    } else if (localLanguage === 'en') {
+    } else if (this.currentLanguage === 'en') {
       this.tabListData = tab_list_en
       this.range = list_select_range_en
       this.selectRangePlaceholder= 'Area: All'
@@ -521,49 +536,17 @@ export default {
       this.range = list_select_range_cn
       this.selectRangePlaceholder= '地区：全部'
     }
-
-    let that = this
-    // uni.$on('tabListIndex',function(data){
-    //   if (that.countryHeritageList[data.curIndex] === undefined) {
-    //     that.listQuery.letters = that.indexList[data.curIndex]
-    //     that.getHeritageList()
-    //   }
-    // })
-    // uni.$on('scrolltolower',function(data){
-    //   // 如果当前索引有值，那么就不再请求数据
-    //   that.indexListIndex++
-    //   let indexListFlag = that.indexList
-    //   if (that.countryHeritageList[that.indexListIndex] !== undefined) {
-    //     return;
-    //   }
-    //
-    //   that.indexListIndex = 1
-    //   if (that.indexList[that.indexListIndex] === that.listQuery.letters) {
-    //     return;
-    //   }
-    //   that.listQuery.letters = that.indexList[that.indexListIndex]
-    //   that.getHeritageList()
-    //   uni.showLoading({
-    //     title: 'Loading'
-    //   });
-    //   that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
-    //   that.eventHandler()
-    //   that.$forceUpdate()
-    //   uni.hideLoading()
-    //   that.$nextTick(() => {
-    //     that.countryHeritageList[that.indexListIndex] = heritageList[that.indexListIndex]
-    //   })
-    // })
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
     this.genStateBgImage(372, true)
     this.getHeritageList()
+    this.scrollInit()
     // this.getHeritageContinent()
   },
   methods: {
-    eventHandler(e) {
-      this.$refs.uIndexListRef.activeIndex = this.indexListIndex
+    scrollInit() {
+      this.scrollViewHeight = uni.$u.sys().windowHeight - 100
     },
     // 遗迹大洲切换
     continentChange(e) {
@@ -573,14 +556,14 @@ export default {
       this.getHeritageList()
     },
     // 遗迹点击事件
-    heritageClick(heritageItem, heritageIndex, countryIndex, countryHeritageIndex) {
+    heritageClick(heritageItem, heritageIndex, countryIndex) {
       this.$set(
-          this.countryHeritageList[countryHeritageIndex][countryIndex].heritages[heritageIndex],
+          this.countryHeritageList[countryIndex].heritages[heritageIndex],
           'is_selected',
-          !this.countryHeritageList[countryHeritageIndex][countryIndex].heritages[heritageIndex].is_selected
+          !this.countryHeritageList[countryIndex].heritages[heritageIndex].is_selected
       );
       this.$forceUpdate()
-      if (this.countryHeritageList[countryHeritageIndex][countryIndex].heritages[heritageIndex].is_selected) {
+      if (this.countryHeritageList[countryIndex].heritages[heritageIndex].is_selected) {
         this.selectedHeritageCount++
         heritageItem.is_checked = true
         this.selectedHeritageList.push(heritageItem)
@@ -595,7 +578,7 @@ export default {
       }
       this.selectCheckedIds = this.selectedHeritageList.map(item => item.id)
       // 计算已经选择的国家的数量
-      this.countryHeritageList[countryHeritageIndex][countryIndex].selected_count = this.countryHeritageList[countryHeritageIndex][countryIndex].heritages.filter(item => item.is_selected).length
+      this.countryHeritageList[countryIndex].selected_count = this.countryHeritageList[countryIndex].heritages.filter(item => item.is_selected).length
     },
     // 获取用户信息
     getUserInfo(login_type) {
@@ -699,30 +682,29 @@ export default {
     },
     // 获取遗产列表
     getHeritageList() {
-      // 直接获取本地数据
-      // this.countryHeritageList = heritageList
-      // 通过接口去获取数据
-      // this.countryHeritageList = heritageList
-      // uni.showLoading({
-      //   title: 'Loading'
-      // });
-      // getHeritage({
-      //   custom: { auth: false },
-      //   params: this.listQuery
-      // })
-      //     .then(response => {
-      //       if (this.countryHeritageList.length) {
-      //         this.countryHeritageList = this.countryHeritageList.concat(
-      //             response.data.countries
-      //         );
-      //       } else {
-      //         this.countryHeritageList = response.data.countries;
-      //       }
-      //       uni.hideLoading()
-      //     })
-      //     .catch(error => {
-      //       uni.hideLoading()
-      //     });
+      // 直接获取本地数据， 每次获取13条数据
+      this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+    },
+    // 列表滚动触底事件
+    scrolltolower() {
+      // 当触底之后, 证明是第一次数据已经加载完毕，列表上显示的已经是0-20的数据，触底之后，就去加载21-40的数据，但是要记住，如果21-40的数据已经加载过了，就需要判断是否加载完毕，如果加载完毕了，就不再加载数据
+      this.countryHeritageListPage++
+      // 计算当前页数的数据，offset = (page - 1) * limit
+      let offset = (this.countryHeritageListPage - 1) * this.countryHeritageListLimit
+      let limit = this.countryHeritageListPage * this.countryHeritageListLimit
+      let countryHeritageList = country_heritage_list.slice(offset, limit)
+      // 添加一个Loading
+      uni.showLoading({
+        title: 'Loading'
+      })
+      // 添加500毫秒延迟，模拟网络请求，然后隐藏Loading
+      setTimeout(() => {
+        if (countryHeritageList.length) {
+          this.countryHeritageList = this.countryHeritageList.concat(countryHeritageList)
+        }
+        uni.hideLoading()
+      }, 500)
+      return;
     },
     // 生成大洲背景海报
     genStateBgImage(imageX) {
@@ -1052,7 +1034,7 @@ export default {
     showToast(message) {
       this.$refs.uToast.show({
         type: 'default',
-        title: '成功',
+        title: 'Success',
         message: message
       })
     },
@@ -1073,6 +1055,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.scroll-Y {
+  height: 100%;
+}
+.scroll-view_H {
+  white-space: nowrap;
+  width: 100%;
+}
+.scroll-view-item {
+  height: 300rpx;
+  line-height: 300rpx;
+  text-align: center;
+  font-size: 36rpx;
+}
+.scroll-view-item_H {
+  display: inline-block;
+  width: 100%;
+  height: 300rpx;
+  line-height: 300rpx;
+  text-align: center;
+  font-size: 36rpx;
+}
+.heritage-list-svg{
+  position: absolute;
+  right: 14px;
+  top: 13px
+}
+.heritage-list-svg-pc{
+  position: absolute;
+  right: 15rpx;
+  top: 10rpx
+}
 .text {
   font-size: 12px;
   color: #666;

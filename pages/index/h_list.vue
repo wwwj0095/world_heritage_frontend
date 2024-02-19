@@ -69,8 +69,15 @@
     <!-- 核心内容区域 -->
     <view class="list-area" style="margin-top: 10px;padding: 0 0.65rem">
 
-      <scroll-view :scroll-top="scrollTop" :style="scrollYStyle" scroll-y="true" class="scroll-Y" @scrolltoupper="upper"
-                   @scrolltolower="lower" @scroll="scroll">
+      <scroll-view
+          :scroll-top="scrollTop"
+          :style="{
+				  maxHeight: $u.addUnit(scrollViewHeight)
+			    }"
+          scroll-y="true"
+          class="scroll-Y"
+          @scrolltoupper="upper"
+          @scrolltolower="lower" @scroll="scroll">
         <view v-for="(country, countryIndex) in countryHeritageList" :key="countryIndex">
           <view>
             <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
@@ -132,6 +139,7 @@ import heritageCountryCN from '@/common/heritage_country_cn.json'
 import tab_list_cn from "@/common/tab_list_cn";
 import tab_list_en from "@/common/tab_list_en";
 import tab_list_jp from "@/common/tab_list_jp";
+import country_heritage_list from "@/common/country_heritage_list.json";
 export default {
   data() {
     return {
@@ -139,8 +147,11 @@ export default {
       deviceType: 'phone',
       dataLoading: false,
       selectedHeritageCount: 0,
+      scrollViewHeight: 0,
       selectedHeritageList: [],
       countryHeritageList: [],
+      countryHeritageListPage: 1,
+      countryHeritageListLimit: 10,
       countrySelectData: [
         {value: 0, text: '国家：全て'}
       ],
@@ -185,14 +196,8 @@ export default {
   onLoad(options) {
     let systemInfo = uni.$u.sys()
     this.deviceType = systemInfo.deviceType
-    let device_id   = systemInfo.deviceId
-
+    this.scrollInit()
     let that = this
-    uni.getSystemInfo({
-      success: function (res) {
-        that.scrollYStyle.height = (res.windowHeight - 150) + 'px';
-      }
-    });
     if (options.token && !this.isLogin) {
       // 代表登录成功
       uni.setStorageSync('auth_token', options.token);
@@ -201,7 +206,7 @@ export default {
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
-    this.countryHeritageList = heritageList.heritage_list
+    this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
 
     this.currentLanguage = uni.getStorageSync('local_lang');
     if (this.currentLanguage === 'jp') {
@@ -235,6 +240,30 @@ export default {
     // this.getHeritageCountryList()
   },
   methods: {
+    scrollInit() {
+      this.scrollViewHeight = uni.$u.sys().windowHeight - 100
+    },
+    // 列表滚动触底事件
+    scrolltolower() {
+      // 当触底之后, 证明是第一次数据已经加载完毕，列表上显示的已经是0-20的数据，触底之后，就去加载21-40的数据，但是要记住，如果21-40的数据已经加载过了，就需要判断是否加载完毕，如果加载完毕了，就不再加载数据
+      this.countryHeritageListPage++
+      // 计算当前页数的数据，offset = (page - 1) * limit
+      let offset = (this.countryHeritageListPage - 1) * this.countryHeritageListLimit
+      let limit = this.countryHeritageListPage * this.countryHeritageListLimit
+      let countryHeritageList = country_heritage_list.slice(offset, limit)
+      // 添加一个Loading
+      uni.showLoading({
+        title: 'Loading'
+      })
+      // 添加500毫秒延迟，模拟网络请求，然后隐藏Loading
+      setTimeout(() => {
+        if (countryHeritageList.length) {
+          this.countryHeritageList = this.countryHeritageList.concat(countryHeritageList)
+        }
+        uni.hideLoading()
+      }, 500)
+      return;
+    },
     // 获取遗产的列表
     getHeritageList() {
       uni.showLoading({
@@ -281,16 +310,6 @@ export default {
           id: e.id
         }
       })
-    },
-    scrolltolower() {
-      this.loadmore()
-    },
-    loadmore() {
-      // for (let i = 0; i < 30; i++) {
-      //   this.indexList.push({
-      //     url: this.urls[uni.$u.random(0, this.urls.length - 1)]
-      //   })
-      // }
     },
     getHeritageCategoryList() {
       getHeritageCategory({ custom: { auth: false}}).then((response) => {
