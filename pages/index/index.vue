@@ -527,7 +527,7 @@ export default {
         }
 
         let start_content = `<div style="display: flex; justify-content: flex-start; align-items: center; text-align: center;" @click="infoClick">`
-
+        // TODO 这里的域名要替换为实际的域名
         let middle_content = `<div style="margin-left: 12px; font-size: 14px; font-weight: 700; text-align: center;">${property.name_jp}</div></div>
                     <div style="display: flex;">
                     <div><a href="https://world-heritage-d0047ce80266.herokuapp.com/client/#/pages/index/detail?id=${property.id}">${property.states_name_jp}</a></div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>

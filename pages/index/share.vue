@@ -438,14 +438,14 @@ export default {
       ctx.fillText(this.OceaniaCount, OceaniaCountX, 210)
 
 
-      const canvas1 = new Canvas(ctx);
+      // const canvas1 = new Canvas(ctx);
       const tree = Node.fromHtml(content);
       tree.setStyle("width", "375px");
       tree.setStyle("height", "250px");
       tree
           .layout(ctx)
           .then(() => {
-            canvas1.draw(tree);
+            // canvas1.draw(tree);
             ctx.draw(false, () => {
               setTimeout(() => {
                 uni.canvasToTempFilePath({
@@ -455,8 +455,8 @@ export default {
                   y: 0,
                   width: tree.boxWidth().value(),
                   height: tree.boxHeight().value(),
-                  destWidth: 375,
-                  destHeight: 250,
+                  destWidth: 375 * 2,
+                  destHeight: 250 * 2,
                   canvasId: "canvas-bg-img",
                   success: (res) => {
                     this.pageImageUrl = res.tempFilePath;
@@ -615,14 +615,14 @@ export default {
       ctx.fillText(this.OceaniaCount, OceaniaCountX, 386)
 
 
-      const canvas = new Canvas(ctx);
+      // const canvas = new Canvas(ctx);
       const tree = Node.fromHtml(content);
       tree.setStyle("width", "375px");
       tree.setStyle("height", "650px");
       tree
           .layout(ctx)
           .then(() => {
-            canvas.draw(tree);
+            // canvas.draw(tree);
             ctx.draw(false, () => {
               setTimeout(() => {
                 uni.canvasToTempFilePath({
@@ -630,12 +630,10 @@ export default {
                   quality: 1,
                   x: 0,
                   y: 0,
-                  scale: 4,
-                  dpi: 300,
-                  width: tree.boxWidth().value(),
-                  height: tree.boxHeight().value(),
-                  destWidth: 375,
-                  destHeight: 600,
+                  width: 375,
+                  height: 600,
+                  destWidth: 350 * 2,
+                  destHeight: 550 * 2,
                   canvasId: "canvas-share",
                   success: (res) => {
                     this.shareImgUrl = res.tempFilePath;
