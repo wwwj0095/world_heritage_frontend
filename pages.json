@@ -9,7 +9,7 @@
 			}
 		},
 		{
-			"path": "pages/index/list",
+			"path": "pages/index/check_in",
 			"style": {
 				"navigationBarTitleText": "チェックイン",
 				"navigationBarHidden": true,
@@ -26,15 +26,7 @@
 			}
 		},
 		{
-			"path": "pages/index/check_in",
-			"style": {
-				"navigationBarTitleText": "リスト",
-				"navigationBarHidden": true,
-				"navigationStyle": "custom"
-			}
-		},
-		{
-			"path": "pages/index/h_list",
+			"path": "pages/index/list",
 			"style": {
 				"navigationBarTitleText": "リスト",
 				"navigationBarHidden": true,

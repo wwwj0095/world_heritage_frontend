@@ -269,7 +269,7 @@ export default {
     },
     leftClick() {
       uni.$u.route({
-        url: '/pages/index/h_list'
+        url: '/pages/index/list'
       })
     },
     languageChange(language) {

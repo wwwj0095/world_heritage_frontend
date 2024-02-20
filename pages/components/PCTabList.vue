@@ -222,10 +222,10 @@ export default {
         url = '/pages/index/index'
       }
       if (item.index === 1) {
-        url = '/pages/index/list'
+        url = '/pages/index/check_in'
       }
       if (item.index === 2) {
-        url = '/pages/index/h_list'
+        url = '/pages/index/list'
       }
       uni.$u.route({
         type: 'redirect',
