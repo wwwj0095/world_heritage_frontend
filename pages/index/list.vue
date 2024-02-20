@@ -25,7 +25,7 @@
           shape="square"
           :showAction="false"
           v-model="listQuery.keyword"
-          @search="searchDataChange" @clear="searchDataChange"></u-search>
+          @search="searchDataChange" @clear="clearSearch"></u-search>
       <!-- 搜索区域 -->
 
       <!-- 选择区域 -->
@@ -284,10 +284,16 @@ export default {
             uni.hideLoading()
           });
     },
+    clearSearch() {
+      this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+    },
     searchDataChange() {
-      this.listQuery.letter = 'A'
       this.countryHeritageList = []
-      this.getHeritageList()
+      if (this.listQuery.keyword === '') {
+        this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+      } else {
+        this.getHeritageList()
+      }
     },
     // 国家分类选择
     countrySelectDataChange(e) {

@@ -433,7 +433,7 @@
 </template>
 
 <script>
-import {getCheckInInfo, getContinent, getUserInfo} from '@/util/request/api.js';
+import {getCheckInInfo, getContinent, getHeritage, getUserInfo} from '@/util/request/api.js';
 import {Canvas, Node} from '@/pages/components/html2canvas/index';
 import tab_list_jp from "@/common/tab_list_jp.json";
 import tab_list_en from "@/common/tab_list_en.json";
@@ -521,7 +521,8 @@ export default {
       uni.setStorageSync('auth_token', options.token);
       this.getUserInfo(options.login_type);
     }
-
+    // 直接获取本地数据， 每次获取13条数据
+    this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
     this.currentLanguage = uni.getStorageSync('local_lang');
     if (this.currentLanguage === 'jp') {
       this.tabListData = tab_list_jp
@@ -540,7 +541,7 @@ export default {
       this.userInfo = uni.getStorageSync('cur_user');
     }
     this.genStateBgImage(372, true)
-    this.getHeritageList()
+    // this.getHeritageList()
     this.scrollInit()
     // this.getHeritageContinent()
   },
@@ -553,7 +554,12 @@ export default {
       this.listQuery.letters = ''
       this.countryHeritageList = []
       this.listQuery.continent = e
-      this.getHeritageList()
+      if (e === 'All') {
+        this.countryHeritageListLimit = 10
+        this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+      } else {
+        this.getHeritageList()
+      }
     },
     // 遗迹点击事件
     heritageClick(heritageItem, heritageIndex, countryIndex) {
@@ -682,8 +688,26 @@ export default {
     },
     // 获取遗产列表
     getHeritageList() {
-      // 直接获取本地数据， 每次获取13条数据
-      this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+      uni.showLoading({
+        title: 'Loading'
+      });
+      getHeritage({
+        custom: { auth: false },
+        params: this.listQuery
+      })
+          .then(response => {
+            if (this.countryHeritageList.length) {
+              this.countryHeritageList = this.countryHeritageList.concat(
+                  response.data.countries
+              );
+            } else {
+              this.countryHeritageList = response.data;
+            }
+            uni.hideLoading()
+          })
+          .catch(error => {
+            uni.hideLoading()
+          });
     },
     // 列表滚动触底事件
     scrolltolower() {
