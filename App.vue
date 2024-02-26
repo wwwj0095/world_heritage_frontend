@@ -6,7 +6,13 @@
       if (isLogin) {
         this.$store.commit('login');
       }
-      this.$store.commit('setLocalLanguage', 'en');
+      let languageData =  uni.getStorageSync('local_lang')
+      if (languageData) {
+        this.$store.commit('setLocalLanguage', languageData);
+      } else {
+        this.$store.commit('setLocalLanguage', 'jp');
+      }
+      // 获取最近的
 		},
 		onShow: function() {
 

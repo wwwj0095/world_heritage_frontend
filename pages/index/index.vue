@@ -10,7 +10,9 @@
         v-if="deviceType === 'phone'"
         :user-info="userInfo"
         :tab-index="tabIndex"
-        :show-about="true"
+        :show-about="false"
+        :show-translate="true"
+        :cur-language="currentLanguage"
         ref="tabList"
         :tab-list="tabListData"></tab-list>
     <pc-tab-list
@@ -32,13 +34,24 @@
           <u-col :span="isLogin ? 8 : 12">
             <u-row style="padding: 5px 0;">
               <u-col>
-                <span style="font-size: 13px;font-weight: 700;">🌍 達成状況</span>
+                <span v-if="currentLanguage === 'jp'" style="font-size: 13px;font-weight: 700;">🌍 達成状況</span>
+                <span v-if="currentLanguage === 'cn'" style="font-size: 13px;font-weight: 700;">🌍 达成情况</span>
+                <span v-if="currentLanguage === 'en'" style="font-size: 13px;font-weight: 700;">🌍 My Status</span>
               </u-col>
             </u-row>
             <u-row style="padding: 5px 0;">
               <u-col>
-                <span v-if="isLogin" style="font-size: 13px;font-weight: 400;">グローバルチェックイン</span>
-                <span v-else style="font-size: 12px;font-weight: 400;"><span @click="showSNSLogin" style="text-decoration: underline; font-weight: bold;">サインアップ</span> してチェックインする</span>
+                <view v-if="isLogin">
+                  <span v-if="currentLanguage === 'jp'" style="font-size: 13px;font-weight: 400;">グローバルチェックイン</span>
+                </view>
+                <view v-else style="font-size: 12px;font-weight: 400;">
+                  <span @click="showSNSLogin" v-if="currentLanguage === 'jp'" class="achievement-box-subtitle-unlogin">サインアップ</span>
+                  <span @click="showSNSLogin" v-if="currentLanguage === 'en'" class="achievement-box-subtitle-unlogin">Sign-up</span>
+                  <span @click="showSNSLogin" v-if="currentLanguage === 'cn'" class="achievement-box-subtitle-unlogin">登录</span>
+                  <span v-if="currentLanguage === 'jp'" class="achievement-box-subtitle-unlogin-content">してチェックインする</span>
+                  <span v-if="currentLanguage === 'en'" class="achievement-box-subtitle-unlogin-content">to see my check-in status</span>
+                  <span v-if="currentLanguage === 'cn'" class="achievement-box-subtitle-unlogin-content">查看达成情况</span>
+                </view>
               </u-col>
             </u-row>
           </u-col>
@@ -62,6 +75,38 @@
     <!-- 地图组件 -->
     <view id="map" :style="this.mapStyle"></view>
     <!-- 地图组件 -->
+
+    <!-- 关于图标 -->
+    <view class="translate-icon" @click="aboutPopupShow = true">
+      <u-icon name="info-circle-fill" color="#1C3B53" size="24"></u-icon>
+    </view>
+    <!-- 关于图标 -->
+
+    <!-- 关于弹出框 -->
+    <u-popup :show="aboutPopupShow" mode="center" :closeable="true" :closeIconPos="'top-left'" @close="closeAboutPopup">
+      <view class="pop-about-style" style="width: 343px; height: 555px">
+        <view style="padding: 0 30px;">
+
+          <view style="text-align: center; font-size: 15px; font-weight: 400; margin-top: 14px;">
+            <span>information</span>
+          </view>
+
+          <view>
+            <u--image  style="align-items: center; margin-top: 30px" :showLoading="true" src="../../static/images/about_logo.png" width="118px" height="118px"></u--image>
+            <u--text style="align-items: center; text-align: center; justify-content: center; height: 25px; margin-top: 10px;"  text="世界遺産の旅" color="#1C3B53"></u--text>
+            <view style="color: #1C3B53; font-size: 15px; margin-top: 20px; font-weight: 400">
+              <view class="popup-information">運営会社  <a href="">  株式会社POPER</a></view>
+              <view class="popup-information"><a href="">利用規約</a></view>
+              <view class="popup-information"><a href="">プライバシーポリシー</a></view>
+              <view class="popup-information"><a href="">Cookieポリシー</a></view>
+              <view class="popup-information"><a href="">お問い合わせ</a></view>
+            </view>
+          </view>
+        </view>
+      </view>
+    </u-popup>
+    <!-- 关于弹出框 -->
+
   </view>
 </template>
 <script>
@@ -88,6 +133,7 @@ export default {
       tabIndex: 0,
       deviceType: 'phone',
       markersLoaded: false,
+      aboutPopupShow: false,
       userInfo: {
         id: '',
         name: '',
@@ -102,6 +148,7 @@ export default {
       tabListData: [],
       userCheckInTotal: 0,
       heritageTotal: 0,
+      currentLanguage: 'cn',
       styles: [
         {
           featureType: "water",
@@ -179,7 +226,6 @@ export default {
   onLoad(options) {
     let systemInfo = uni.$u.sys()
     this.deviceType = systemInfo.deviceType
-    let device_id   = systemInfo.deviceId
     if (options.token && !this.isLogin) {
       // 再判断是否是同一个设备
       // if (device_id === options.device_id) {
@@ -188,10 +234,10 @@ export default {
         this.getUserInfo(options.login_type);
       // }
     }
-    let localLanguage = uni.getStorageSync('local_lang');
-    if (localLanguage === 'jp') {
+    this.currentLanguage = uni.getStorageSync('local_lang');
+    if (this.currentLanguage === 'jp') {
       this.tabListData = tab_list_jp
-    } else if (localLanguage === 'en') {
+    } else if (this.currentLanguage === 'en') {
       this.tabListData = tab_list_en
     } else {
       this.tabListData = tab_list_cn
@@ -228,6 +274,9 @@ export default {
     this.initMap();
   },
   methods: {
+    closeAboutPopup() {
+      this.aboutPopupShow = false
+    },
     // 获取遗迹总数量
     async getHeritageCount() {
       await getHeritageCount().then((response) => {
@@ -654,10 +703,6 @@ export default {
         return degrees * (Math.PI/180);
       }
     },
-    // 窗口点击事件
-    infoClick() {
-
-    },
     buildContent(property, index) {
       const priceTag = document.createElement("div");
       priceTag.className = "price-tag";
@@ -736,6 +781,21 @@ h2 {
   top: 88%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 1000;
+}
+
+.achievement-box-subtitle-unlogin {
+  text-decoration: underline; font-weight: bold;
+}
+
+.achievement-box-subtitle-unlogin-content {
+  margin-left: 5px;
+}
+
+.translate-icon {
+  position: absolute;
+  top: 90%;
+  left: 10%;
   z-index: 1000;
 }
 

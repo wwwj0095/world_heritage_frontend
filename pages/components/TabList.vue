@@ -21,10 +21,19 @@
       <!-- 个人图标 -->
 
       <!-- 关于图标 -->
-      <view v-if="showAbout" class="about-icon" @click="aboutPopupShow = true">
-        <u-icon name="info-circle-fill" color="#1C3B53" size="24"></u-icon>
-      </view>
+<!--      <view v-if="showAbout" class="about-icon" @click="aboutPopupShow = true">-->
+<!--        <u-icon name="info-circle-fill" color="#1C3B53" size="24"></u-icon>-->
+<!--      </view>-->
       <!-- 关于图标 -->
+
+      <!-- 翻译图标 -->
+      <view v-if="showTranslate" class="translate-icon" @click="clickTranslate">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" >
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M10.88 5H20C21.1 5 22 5.9 22 7V20C22 21.1 21.1 22 20 22H12L11 19H4C2.9 19 2 18.1 2 17V4C2 2.9 2.9 2 4 2H10L10.88 5ZM14.39 14.58C13.94 14.06 13.53 13.48 13.2 12.88L13.85 15.11L14.39 14.58ZM12.98 12.12H13.97C14.21 12.59 14.58 13.2 15.1 13.82C16.32 12.39 16.66 11.08 16.66 11.08H12.67L12.98 12.12ZM20 21C20.55 21 21 20.55 21 20V7C21 6.45 20.55 6 20 6H11.18L12.36 10.04H14.32V9H15.36V10.04H19V11.08H17.73C17.41 12.34 16.71 13.56 15.81 14.59L18.52 17.27L17.79 18L15.11 15.31L14.19 16.23L15 19L13 21H20ZM3.82595 14.6059H5.02507L5.71079 12.6244H8.63618L9.32071 14.6059H10.5198L7.82546 7.11869H6.52032L3.82595 14.6059ZM8.3078 11.6739L7.20397 8.47867H7.14547L6.03973 11.6739H8.3078Z" fill="#1C3B53"/>
+        </svg>
+      </view>
+      <!-- 翻译图标 -->
+
     </u-sticky>
     <!-- Tab吸顶 -->
 
@@ -154,6 +163,34 @@
       </view>
     </u-popup>
     <!-- 关于弹出框 -->
+
+    <!-- 翻译选择弹出框 -->
+    <view v-if="translatePopupShow" class="language-area" style="width: 100%; background-color: #fff; position: fixed; top: 40px; left: 0; z-index: 1000">
+      <view style="height: 140px; padding: 10px; margin-top: 2px;">
+        <u-row customStyle="margin-bottom: 10px">
+          <u-col span="12">
+            <view @click="languageChange('jp')" class="translate-button" :style="{ color: curLanguage === 'jp' ? '#ffffff' : '#1C3B53' , backgroundColor:  curLanguage === 'jp' ? '#1C3B53' : '#ffffff'}">
+              <span style="margin-right: 5px;">日本語</span>
+            </view>
+          </u-col>
+        </u-row>
+        <u-row customStyle="margin-bottom: 10px">
+          <u-col span="12">
+            <view @click="languageChange('en')" class="translate-button" :style="{ color: curLanguage === 'en' ? '#ffffff' : '#1C3B53' , backgroundColor:  curLanguage === 'en' ? '#1C3B53' : '#ffffff'}">
+              English
+            </view>
+          </u-col>
+        </u-row>
+        <u-row customStyle="margin-bottom: 10px">
+          <u-col span="12">
+            <view @click="languageChange('cn')" class="translate-button" :style="{ color: curLanguage === 'cn' ? '#ffffff' : '#1C3B53' , backgroundColor:  curLanguage === 'cn' ? '#1C3B53' : '#ffffff'}">
+              简体中文
+            </view>
+          </u-col>
+        </u-row>
+      </view>
+    </view>
+    <!-- 翻译选择弹出框 -->
   </view>
 </template>
 
@@ -165,12 +202,21 @@ export default {
     return {
       mobileDeviceShow: false,
       aboutPopupShow: false,
+      translatePopupShow: false
     };
   },
   props: {
     tabIndex: {
       type: Number,
       default: 0
+    },
+    showTranslate: {
+      type: Boolean,
+      default: false
+    },
+    curLanguage: {
+      type: String,
+      default: 'cn'
     },
     showAbout: {
       type: Boolean,
@@ -203,6 +249,14 @@ export default {
     },
     closePop() {
       this.mobileDeviceShow = false
+    },
+    clickTranslate() {
+      this.translatePopupShow = !this.translatePopupShow
+    },
+    languageChange(language) {
+      this.$store.commit('setLocalLanguage', language);
+      this.translatePopupShow = false
+      window.location.reload();
     },
     logout() {
       this.$store.commit('logout')
@@ -260,6 +314,12 @@ export default {
   z-index: 1000;
 }
 
+.translate-icon {
+  position: absolute;
+  top: 10px;
+  right: 0.65rem;
+  z-index: 1000;
+}
 
 .sns-login-style {
   height: 40px;
@@ -297,5 +357,19 @@ export default {
 
 .popup-information {
   margin: 10px 0
+}
+
+.translate-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  //background-color: #1C3B53;
+  height: 40px;
+  color: #1C3B53;
+  font-size: 15px;
+  text-align: center;
+  line-height: 40px;
+
 }
 </style>
