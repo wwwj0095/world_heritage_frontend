@@ -1,5 +1,5 @@
 <script>
-	export default {
+  export default {
 		onLaunch: function() {
       // 读取全局变量
       const isLogin = uni.getStorageSync('is_login');
@@ -12,7 +12,7 @@
       } else {
         this.$store.commit('setLocalLanguage', 'jp');
       }
-      // 获取最近的
+
 		},
 		onShow: function() {
 

@@ -24,15 +24,34 @@
       <!-- 通知组件 -->
 
       <!-- 下拉选择框区域 -->
-      <view class="select-area" style="margin-top: 10px;">
-        <uni-data-select
-            v-model="value"
-            :clear="false"
-            :localdata="range"
-            :placeholder="selectRangePlaceholder"
-            @change="continentChange"
-        ></uni-data-select>
-      </view>
+      <u-row customStyle="margin-bottom: 10px">
+        <u-col span="7">
+          <view style="padding: 0 5px 0 0; font-size: 10px; margin-top: 10px;">
+            <view>
+              <uni-data-select
+                  v-model="listQuery.country"
+                  :clear="true"
+                  :localdata="categoryMainData"
+                  :placeholder="categoryMainPlaceholder"
+                  @change="countryChange"
+              ></uni-data-select>
+            </view>
+          </view>
+        </u-col>
+        <u-col span="5">
+          <view style="padding: 0 0 0 5px">
+            <view class="select-area" style="margin-top: 10px;">
+              <uni-data-select
+                  :clear="true"
+                  v-model="listQuery.category_sub"
+                  :localdata="categorySubData"
+                  :placeholder="categorySubPlaceholder"
+                  @change="categorySubChange"
+              ></uni-data-select>
+            </view>
+          </view>
+        </u-col>
+      </u-row>
       <!-- 下拉选择框区域 -->
     </view>
     <!-- 头部内容 -->
@@ -48,7 +67,7 @@
 				  maxHeight: $u.addUnit(scrollViewHeight)
 			    }"
           @scrolltolower="scrolltolower">
-        <view v-for="(country, countryIndex) in countryHeritageList">
+        <view v-for="(country, countryIndex) in checkInListData">
           <u-row>
             <u-col span="9">
               <view style="display: flex; padding: 0 0 0 11px;">
@@ -61,39 +80,39 @@
             </u-col>
             <u-col span="3">
               <view style="font-size: 12px; color: #1C3B53; margin-left: 100rpx;">
-                <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.heritages.length }}</span>
+                <span>{{ country.selected_count ? country.selected_count : 0 }}/ {{ country.app_data.length }}</span>
               </view>
             </u-col>
           </u-row>
           <u-grid :border="false" col="2">
             <u-grid-item
-                v-for="(heritageItem, heritageIndex) in country.heritages"
-                :key="heritageIndex"
-                :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
+                v-for="(appDataItem, appDataIndex) in country.app_data"
+                :key="appDataIndex"
+                :style="{border: appDataItem.is_selected ? '3px solid #72CD18' : 'none'}"
                 style="height: 130px;justify-content: normal; padding: 10px; margin: 3px 3px; width: 48%;  position: relative;"
-                @click="heritageClick(heritageItem, heritageIndex, countryIndex)">
+                @click="appDataClick(appDataItem, appDataIndex, countryIndex)">
               <view>
-                <u--image :showLoading="true" :src="heritageItem.cover_img" width="178" height="70px" style="text-align: center"></u--image>
-                <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                <u--image :showLoading="true" :src="getCoverImageUrl(appDataItem.cover_img)" width="178" height="70px" style="text-align: center"></u--image>
+                <svg v-if="appDataItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
                   <circle cx="8" cy="8" r="8" fill="#A57AED"/>
                   <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
                 </svg>
 
-                <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                <svg v-if="appDataItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
                   <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
                 </svg>
 
-                <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
+                <svg v-if="appDataItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg">
                   <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
                   <circle cx="8" cy="5" r="2" fill="white"/>
                   <circle cx="5" cy="10" r="2" fill="white"/>
                   <circle cx="11" cy="10" r="2" fill="white"/>
                 </svg>
 
-                <u--text v-if="currentLanguage === 'jp'" :text="heritageItem.name_jp" size="12" :lines="2"></u--text>
-                <u--text v-else-if="currentLanguage === 'en'" :text="heritageItem.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
-                <u--text v-else :text="heritageItem.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
+                <u--text v-if="currentLanguage === 'jp'" :text="appDataItem.name_jp" size="12" :lines="2"></u--text>
+                <u--text v-else-if="currentLanguage === 'en'" :text="appDataItem.name_en" lines="2" size="13px" color="#1C3B53"></u--text>
+                <u--text v-else :text="appDataItem.name_cn" lines="2" size="13px" color="#1C3B53"></u--text>
               </view>
             </u-grid-item>
           </u-grid>
@@ -105,7 +124,7 @@
           :scroll-top="scrollTop"
           scroll-y="true"
           class="scroll-Y">
-        <view v-for="(country, countryIndex) in countryHeritageList">
+        <view v-for="(country, countryIndex) in checkInListData">
           <u-row>
             <u-col span="8">
               <view>
@@ -126,31 +145,31 @@
           </u-row>
           <u-grid :border="false" col="6">
             <u-grid-item
-                v-for="(heritageItem, heritageIndex) in country.heritages"
-                :key="heritageIndex"
-                :style="{border: heritageItem.is_selected ? '3px solid #72CD18' : 'none'}"
+                v-for="(appDataItem, appDataIndex) in country.app_data"
+                :key="appDataIndex"
+                :style="{border: appDataItem.is_selected ? '3px solid #72CD18' : 'none'}"
                 style="height: 168px; justify-content: normal; margin: 3px 3px;  position: relative;"
-                @click="heritageClick(heritageItem, heritageIndex, countryIndex)">
+                @click="appDataClick(appDataItem, appDataIndex, countryIndex)">
               <view style="position: relative;">
-                <u--image :showLoading="true" :src="heritageItem.cover_img" width="250" height="100px" style="text-align: center"></u--image>
-                <svg v-if="heritageItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                <u--image :showLoading="true" :src="getCoverImageUrl(appDataItem.cover_img)" width="250" height="100px" style="text-align: center"></u--image>
+                <svg v-if="appDataItem.category === 'Cultural'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
                   <circle cx="8" cy="8" r="8" fill="#A57AED"/>
                   <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
                 </svg>
 
-                <svg v-if="heritageItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                <svg v-if="appDataItem.category === 'Natural'" width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
                   <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
                   <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
                 </svg>
 
-                <svg v-if="heritageItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
+                <svg v-if="appDataItem.category === 'Mixed'" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" class="heritage-list-svg-pc">
                   <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
                   <circle cx="8" cy="5" r="2" fill="white"/>
                   <circle cx="5" cy="10" r="2" fill="white"/>
                   <circle cx="11" cy="10" r="2" fill="white"/>
                 </svg>
 
-                <u--text :text="heritageItem.name_jp" size="12" :lines="3"></u--text>
+                <u--text :text="appDataItem.name_jp" size="12" :lines="3"></u--text>
               </view>
             </u-grid-item>
           </u-grid>
@@ -163,9 +182,9 @@
     <view class="bottom-button-area">
       <view style="display: flex; justify-content: space-between; align-items: center; text-align: center; width: 100%">
         <view class="bottom-button" style="margin: 0 0.8rem;" @click="popupShow = true">
-          選択済（{{ selectCheckedIds.length }}件）
+          {{ selectedText }}（{{ selectCheckedIds.length }}件）
         </view>
-        <view class="bottom-button" style="margin: 0 1rem;"  @click="redirectToSharePage">チェックイン</view>
+        <view class="bottom-button" style="margin: 0 1rem;"  @click="redirectToSharePage">{{ checkBtnText }}</view>
       </view>
     </view>
     <!-- 底部固定按钮 -->
@@ -175,7 +194,7 @@
       <u-popup :show="popupShow" mode="center"  @close="popupShow = false">
         <view style="height: 555px;">
           <view style="text-align: center; font-size: 15px; margin-top: 14px; font-weight: 400; margin-bottom: 10px;">
-            <span>選択済（{{ selectCheckedIds.length }}件）</span>
+            <span>{{ selectedText }}（{{ selectCheckedIds.length }}件）</span>
           </view>
 
           <!--已选中的数据滚动区域-->
@@ -192,13 +211,13 @@
                   <u-checkbox
                       shape="circle"
                       activeColor="#72CD18"
-                      @change="selectHeritageClick(item)"
+                      @change="selectAppDataClick(item)"
                       :checked="item.is_checked"
                       style="margin: 8px 15px; font-size: 15px"
                       :customStyle="{marginBottom: '8px'}"
-                      v-for="(item, index) in selectedHeritageList"
+                      v-for="(item, index) in selectedListData"
                       :key="index"
-                      :label="item.name_jp"
+                      :label="getCheckBoxLabelText(item)"
                       :name="item.id"
                   >
                   </u-checkbox>
@@ -213,8 +232,8 @@
                 align-items: center;
                 text-align: center;
                 width: 100%;">
-              <view class="bottom-button" style="margin: 0 30rpx;" @click="clearCheckSelected">クリア</view>
-              <view class="bottom-button" style="margin: 0 30rpx;" @click="confirmSelected">確認</view>
+              <view class="bottom-button" style="margin: 0 30rpx;" @click="clearCheckSelected">{{ popupClearBtn }}</view>
+              <view class="bottom-button" style="margin: 0 30rpx;" @click="confirmSelected">{{ popupConfirmBtn }}</view>
             </view>
           </view>
           <!--已选中的数据滚动区域-->
@@ -433,15 +452,12 @@
 </template>
 
 <script>
-import {getCheckInInfo, getContinent, getHeritage, getUserInfo} from '@/util/request/api.js';
+import {getCheckInInfo, getListData, getUserInfo, getUserTokenByTokenKey} from '@/util/request/api.js';
 import {Canvas, Node} from '@/pages/components/html2canvas/index';
 import tab_list_jp from "@/common/tab_list_jp.json";
 import tab_list_en from "@/common/tab_list_en.json";
 import tab_list_cn from "@/common/tab_list_cn.json";
-import list_select_range_cn from "@/common/list_select_range_cn.json";
-import list_select_range_en from "@/common/list_select_range_en.json";
-import list_select_range_jp from "@/common/list_select_range_jp.json";
-import country_heritage_list from "@/common/country_heritage_list.json";
+import {s3Path} from "@/common/config";
 
 export default {
   data() {
@@ -456,6 +472,7 @@ export default {
       isAllSelectCheckedIds: true,
       pageImageUrl: '', // 分享框背景地图URL
       saveImageUrl: '', // 保存到本地的图片URL
+      categoryMainPlaceholder: '国家：全て',
       deviceType: 'phone',
       EuropeCount: 0,
       AfricaCount: 0,
@@ -466,29 +483,33 @@ export default {
       shareImgUrl: '',
       CentralAmericaCount: 0,
       SouthAmericaCount: 0,
-      selectedHeritageCount: 0,
-      selectedHeritageList: [],
+      selectedListDataCount: 0,
+      selectedListData: [],
       scrollTop: 0,
       tabListData: [],
-      selectRangePlaceholder: '',
-      countryHeritageList: [],
-      countryHeritageListPage: 1,
-      countryHeritageListLimit: 10,
+      categorySubPlaceholder: '',
+      checkInListData: [],
+      checkInListAllData: [],
+      checkInListPage: 1,
+      checkInListLimit: 10,
       currentLanguage: 'cn',
       // 已选中的数据Id集合
       selectCheckedIds: [],
       // 已选中的数据集合，该集合用于处理页面上的边框
       selectCheckedList: [],
-      range: [
+      categorySubData: [
         {value: 0, text: '全て'}
+      ],
+      continentData: [
+        {value: 'All', text: '全て'}
+      ],
+      categoryMainData: [
+        {value: 0, text: '国家：全て'}
       ],
       // 已选中的遗产统计数据
       selectedHeritageStatistics: {
         rate: '0/0',
         continent_data_list: []
-      },
-      old: {
-        scrollTop: 0
       },
       userInfo: {
         id: '',
@@ -497,8 +518,9 @@ export default {
         avatar: ''
       },
       listQuery: {
-        letters: 'A',
-        continent: ''
+        country: '',
+        continent: '',
+        category_sub: ''
       },
       shareInfoQuery: {
         params: ''
@@ -510,109 +532,221 @@ export default {
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
-    }
+    },
+    selectedText() {
+      if (this.currentLanguage === 'jp') {
+        return '選択済'
+      } else if (this.currentLanguage === 'en') {
+        return 'Selected'
+      } else {
+        return '已选择'
+      }
+    },
+    checkBtnText() {
+      if (this.currentLanguage === 'jp') {
+        return '登録'
+      } else if (this.currentLanguage === 'en') {
+        return 'Check-in'
+      } else {
+        return '打卡'
+      }
+    },
+    popupClearBtn() {
+      if (this.currentLanguage === 'jp') {
+        return 'クリア'
+      } else if (this.currentLanguage === 'en') {
+        return 'Clear'
+      } else {
+        return '清空'
+      }
+    },
+    popupConfirmBtn() {
+      if (this.currentLanguage === 'jp') {
+        return '確認'
+      } else if (this.currentLanguage === 'en') {
+        return 'OK'
+      } else {
+        return '确认'
+      }
+    },
   },
   onLoad(options) {
     let systemInfo = uni.$u.sys()
     this.deviceType = systemInfo.deviceType
-    let device_id   = systemInfo.deviceId
-    if (options.token && !this.isLogin) {
-      // 代表登录成功
-      uni.setStorageSync('auth_token', options.token);
-      this.getUserInfo(options.login_type);
+    if (options.token_key && !this.isLogin) {
+      this.getUserTokenKey(options.login_type, options.token_key);
     }
-    // 直接获取本地数据， 每次获取13条数据
-    this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
     this.currentLanguage = uni.getStorageSync('local_lang');
     if (this.currentLanguage === 'jp') {
       this.tabListData = tab_list_jp
-      this.range = list_select_range_jp
-      this.selectRangePlaceholder= 'エリア：全て'
+      this.categorySubPlaceholder= 'エリア：全て'
+      this.categoryMainPlaceholder = '国：全て'
+      this.categorySubData = [
+        {value: 0, text: '全て'}
+      ]
     } else if (this.currentLanguage === 'en') {
       this.tabListData = tab_list_en
-      this.range = list_select_range_en
-      this.selectRangePlaceholder= 'Area: All'
+      this.categorySubPlaceholder= 'Area: All'
+      this.categoryMainPlaceholder = 'Country: All'
+      this.categorySubData = [
+        {value: 0, text: 'All'}
+      ]
+      this.continentData = [
+        {value: 'All', text: 'All'}
+      ]
     } else {
       this.tabListData = tab_list_cn
-      this.range = list_select_range_cn
-      this.selectRangePlaceholder= '地区：全部'
+      this.categorySubPlaceholder= '地区：全部'
+      this.categoryMainPlaceholder = '国家：全部'
+      this.categorySubData = [
+        {value: 0, text: '全部'}
+      ]
+      this.continentData = [
+        {value: 'All', text: '全部'}
+      ]
     }
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
     }
+    this.getCategoryMainJson()
+    this.getCategorySubJson()
+    // this.getContinentData()
+    this.getCheckListJson()
     this.genStateBgImage(372, true)
-    // this.getHeritageList()
     this.scrollInit()
-    // this.getHeritageContinent()
   },
   methods: {
-    scrollInit() {
-      this.scrollViewHeight = uni.$u.sys().windowHeight - 100
+    // 获取左侧筛选数据
+    getCategoryMainJson() {
+      let requestUrl = `${s3Path}country_${this.currentLanguage}.json?time=` + new Date().getTime()
+      uni.$u.http.get(requestUrl).then(res => {
+        this.categoryMainData = res
+      })
     },
-    // 遗迹大洲切换
-    continentChange(e) {
-      this.listQuery.letters = ''
-      this.countryHeritageList = []
-      this.listQuery.continent = e
-      if (e === 'All') {
-        this.countryHeritageListLimit = 10
-        this.countryHeritageList = country_heritage_list.slice(0, this.countryHeritageListLimit)
+    getContinentData() {
+      let requestUrl = `${s3Path}continent_${this.currentLanguage}.json?time=` + new Date().getTime()
+      uni.$u.http.get(requestUrl).then(res => {
+        this.categorySubData = this.categorySubData.concat(res)
+      })
+    },
+    // 获取右侧筛选数据
+    getCategorySubJson() {
+      let requestUrl = `${s3Path}category/category_sub_${this.currentLanguage}.json?time=` + new Date().getTime()
+      uni.$u.http.get(requestUrl).then(res => {
+        this.categorySubData = this.categorySubData.concat(res)
+      })
+    },
+    getCoverImageUrl(image) {
+      // 如果image是以 http 或者 https 开头的, 那么就直接返回，否则就拼接
+      if (image.startsWith('http') || image.startsWith('https')) {
+        return image
       } else {
-        this.getHeritageList()
+        return s3Path + image
       }
     },
-    // 遗迹点击事件
-    heritageClick(heritageItem, heritageIndex, countryIndex) {
-      this.$set(
-          this.countryHeritageList[countryIndex].heritages[heritageIndex],
-          'is_selected',
-          !this.countryHeritageList[countryIndex].heritages[heritageIndex].is_selected
-      );
-      this.$forceUpdate()
-      if (this.countryHeritageList[countryIndex].heritages[heritageIndex].is_selected) {
-        this.selectedHeritageCount++
-        heritageItem.is_checked = true
-        this.selectedHeritageList.push(heritageItem)
+    getCheckBoxLabelText(item) {
+      if (this.currentLanguage === 'jp') {
+        return item.name_jp
+      } else if (this.currentLanguage === 'en') {
+        return item.name_en
       } else {
-        this.selectedHeritageCount--
-        // 根据 heritageItem.id 判断该条数据是否存在与selectedHeritageList 中
-        let index = this.selectedHeritageList.findIndex(item => item.id === heritageItem.id)
-        // 如果存在, 那么就删除
-        if (index > -1) {
-          this.selectedHeritageList.splice(index, 1)
-        }
+        return item.name_cn
       }
-      this.selectCheckedIds = this.selectedHeritageList.map(item => item.id)
-      // 计算已经选择的国家的数量
-      this.countryHeritageList[countryIndex].selected_count = this.countryHeritageList[countryIndex].heritages.filter(item => item.is_selected).length
     },
-    // 获取用户信息
-    getUserInfo(login_type) {
+    // 获取列表的数据
+    getCheckListJson() {
+      // let requestUrl = `${s3Path}check_in/check_in_list.json`
+      let requestUrl = `${s3Path}list/list_data.json?time=` + new Date().getTime()
       uni.showLoading({
         title: 'Loading'
-      });
-      getUserInfo({ custom: { auth: true, login_type: login_type }}).then((response) => {
-        this.$store.commit('login', response);
-        this.userInfo = response.data.user;
+      })
+      uni.$u.http.get(requestUrl).then(res => {
+        this.checkInListAllData = res
+        this.checkInListData = this.checkInListAllData.slice(0, this.checkInListLimit)
         uni.hideLoading()
       }).catch(() => {
         uni.hideLoading()
       })
     },
+    scrollInit() {
+      this.scrollViewHeight = uni.$u.sys().windowHeight - 100
+    },
+    // 遗迹大洲切换
+    countryChange(e) {
+      this.checkInListData = []
+      this.listQuery.country = e
+      if ((e === 'All' || e === '') && (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '')) {
+        this.checkInListLimit = 10;
+        this.checkInListData = this.checkInListAllData.slice(0, this.checkInListLimit);
+      } else {
+        this.requestListData();
+      }
+    },
+    categorySubChange(e) {
+      this.checkInListData = []
+      this.listQuery.category_sub = e
+      if ((e === 'All' || e === '') && (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '')) {
+        this.checkInListLimit = 10;
+        this.checkInListData = this.checkInListAllData.slice(0, this.checkInListLimit);
+      } else {
+        this.requestListData();
+      }
+    },
+    // 遗迹点击事件
+    appDataClick(appDataItem, appDataIndex, countryIndex) {
+      this.$set(
+          this.checkInListData[countryIndex].app_data[appDataIndex],
+          'is_selected',
+          !this.checkInListData[countryIndex].app_data[appDataIndex].is_selected
+      );
+      this.$forceUpdate()
+      if (this.checkInListData[countryIndex].app_data[appDataIndex].is_selected) {
+        this.selectedListDataCount++
+        appDataItem.is_checked = true
+        this.selectedListData.push(appDataItem)
+      } else {
+        this.selectedListDataCount--
+        let index = this.selectedListData.findIndex(item => item.id === appDataItem.id)
+        // 如果存在, 那么就删除
+        if (index > -1) {
+          this.selectedListData.splice(index, 1)
+        }
+      }
+      this.selectCheckedIds = this.selectedListData.map(item => item.id)
+      // 计算已经选择的国家的数量
+      this.checkInListData[countryIndex].selected_count = this.checkInListData[countryIndex].app_data.filter(item => item.is_selected).length
+    },
+    getUserTokenKey(login_type, token_key) {
+      getUserTokenByTokenKey({ params: { login_type: login_type , token_key: token_key}}).then((response) => {
+        if (response.data) {
+          uni.setStorageSync('auth_token', response.data);
+          this.getUserInfoByToken(response.data.login_type, response.data.token_key)
+        }
+      })
+    },
+    // 获取用户信息
+    getUserInfoByToken(login_type, token_key) {
+      uni.showLoading({ title: 'Loading' });
+      getUserInfo({ custom: { auth: true, login_type: login_type , token_key: token_key}}).then((response) => {
+        this.$store.commit('login', response);
+        this.userInfo = response.data.user;
+        uni.hideLoading()
+      })
+    },
     // 遗迹选择框确认按钮
     confirmSelected() {
-      this.selectedHeritageList = this.selectedHeritageList.filter(item => item.is_checked)
+      this.selectedListData = this.selectedListData.filter(item => item.is_checked)
       this.popupShow = false
     },
     // 已选择的遗迹的点击事件,
-    selectHeritageClick(heritageItem) {
-      heritageItem.is_checked = !heritageItem.is_checked
-      heritageItem.is_selected = !heritageItem.is_selected
+    selectAppDataClick(appDataItem) {
+      appDataItem.is_checked = !appDataItem.is_checked
+      appDataItem.is_selected = !appDataItem.is_selected
       this.$forceUpdate()
     },
     // 清空所有选中状态
     clearCheckSelected() {
-      this.selectedHeritageList.forEach((item, index) => {
+      this.selectedListData.forEach((item, index) => {
         item.is_checked = false
         item.is_selected = false
       })
@@ -626,6 +760,7 @@ export default {
         this.showToast('選択された遺産がありません')
         return
       }
+
       // 如果是在移动设备上, 那么就跳转到分享页面, 否则就生成海报
       if (this.deviceType === 'phone') {
         uni.$u.route({
@@ -680,28 +815,22 @@ export default {
     showMapFlagImage() {
       this.genShareBgImage(342, true)
     },
-    // 获取遗迹的大洲
-    getHeritageContinent() {
-      getContinent({ custom: { auth: false}}).then((response) => {
-        this.range = response.data
-      })
-    },
     // 获取遗产列表
-    getHeritageList() {
+    requestListData() {
       uni.showLoading({
         title: 'Loading'
       });
-      getHeritage({
+      getListData({
         custom: { auth: false },
         params: this.listQuery
       })
           .then(response => {
-            if (this.countryHeritageList.length) {
-              this.countryHeritageList = this.countryHeritageList.concat(
+            if (this.checkInListData.length) {
+              this.checkInListData = this.checkInListData.concat(
                   response.data.countries
               );
             } else {
-              this.countryHeritageList = response.data;
+              this.checkInListData = response.data;
             }
             uni.hideLoading()
           })
@@ -712,19 +841,19 @@ export default {
     // 列表滚动触底事件
     scrolltolower() {
       // 当触底之后, 证明是第一次数据已经加载完毕，列表上显示的已经是0-20的数据，触底之后，就去加载21-40的数据，但是要记住，如果21-40的数据已经加载过了，就需要判断是否加载完毕，如果加载完毕了，就不再加载数据
-      this.countryHeritageListPage++
+      this.checkInListPage++
       // 计算当前页数的数据，offset = (page - 1) * limit
-      let offset = (this.countryHeritageListPage - 1) * this.countryHeritageListLimit
-      let limit = this.countryHeritageListPage * this.countryHeritageListLimit
-      let countryHeritageList = country_heritage_list.slice(offset, limit)
+      let offset = (this.checkInListPage - 1) * this.checkInListLimit
+      let limit = this.checkInListPage * this.checkInListLimit
+      let checkInListData = this.checkInListAllData.slice(offset, limit)
       // 添加一个Loading
       uni.showLoading({
         title: 'Loading'
       })
       // 添加500毫秒延迟，模拟网络请求，然后隐藏Loading
       setTimeout(() => {
-        if (countryHeritageList.length) {
-          this.countryHeritageList = this.countryHeritageList.concat(countryHeritageList)
+        if (checkInListData.length) {
+          this.checkInListData = this.checkInListData.concat(checkInListData)
         }
         uni.hideLoading()
       }, 500)

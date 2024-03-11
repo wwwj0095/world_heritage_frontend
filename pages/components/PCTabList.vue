@@ -162,7 +162,6 @@
 
 <script>
 import config from "@/common/config";
-import {getTwitterLogin} from "@/util/request/api";
 export default {
   name: 'TabList',
   data() {
@@ -200,6 +199,9 @@ export default {
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
+    },
+    curLoginTitle() {
+      return this.isLogin ? 'プロフィール' : 'ソーシャルログイン'
     }
   },
   methods: {

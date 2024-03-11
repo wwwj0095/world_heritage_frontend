@@ -43,8 +43,8 @@
         <view style="padding: 45rpx 16px">
 
           <view style="position: relative; top: -20rpx; text-align: center; font-size: 15px; font-weight: 400;">
-            <span v-if="isLogin">プロフィール</span>
-            <span v-else>ソーシャルログイン</span>
+            <span v-if="isLogin">{{ loginTitle }}</span>
+            <span v-else>{{ curLoginTitle }}</span>
           </view>
 
           <view class="sns-icon-area" v-if="!isLogin">
@@ -116,13 +116,13 @@
               </u-col>
             </u-row>
 
-            <!--Twitter Icon-->
+            <!-- Logout Bottom -->
             <view class="sns-login-style sns-login-top" style="height: 2.1rem" @click="logout">
               <view class="sns-login-style-svg">
-                <span style="color: #ffffff; font-size: 15px">ログアウトする</span>
+                <span style="color: #ffffff; font-size: 15px">{{ logoutText }}</span>
               </view>
             </view>
-            <!--Twitter Icon-->
+            <!-- Logout Bottom -->
           </view>
 
         </view>
@@ -202,7 +202,7 @@ export default {
     return {
       mobileDeviceShow: false,
       aboutPopupShow: false,
-      translatePopupShow: false
+      translatePopupShow: false,
     };
   },
   props: {
@@ -241,6 +241,33 @@ export default {
     },
     currentLanguage() {
       return this.$store.state.currentLanguage;
+    },
+    curLoginTitle() {
+      if (this.currentLanguage === 'jp') {
+        return 'ソーシャルログイン'
+      } else if (this.currentLanguage === 'en') {
+        return 'Login With...'
+      } else {
+        return '社交账户登录'
+      }
+    },
+    logoutText() {
+      if (this.currentLanguage === 'jp') {
+        return 'ログアウトする'
+      } else if (this.currentLanguage === 'en') {
+        return 'Logout'
+      } else {
+        return '退出'
+      }
+    },
+    loginTitle() {
+      if (this.currentLanguage === 'jp') {
+        return 'プロフィール'
+      } else if (this.currentLanguage === 'en') {
+        return 'My Profile'
+      } else {
+        return '个人档案'
+      }
     }
   },
   methods: {
@@ -259,6 +286,15 @@ export default {
       window.location.reload();
     },
     logout() {
+      // TODO 加一个弹出框, 不能直接就退出了，并且还要刷新下页面，因为url中带有token_key
+      // 获取当前页面的 URL
+      var currentUrl = window.location.href;
+
+      // 去除 URL 中的参数部分
+      var newUrl = currentUrl.split('?')[0];
+
+      // 刷新页面并跳转到新的 URL
+      window.location.replace(newUrl);
       this.$store.commit('logout')
       this.mobileDeviceShow = false
     },

@@ -6,21 +6,23 @@
 
       <u-toast ref="uToast"></u-toast>
 
-      <u-popup :show="sharePopupShow" mode="top">
+      <u-popup :show="sharePopupShow" mode="top" :closeable="true" :closeIconPos="'top-left'" @close="closeSharePopup">
         <view style="padding: 0 1.5625rem;">
           <!--Close Icon-->
-          <view style="position: relative; top: 1.6rem" @click="closeSharePopup">
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <path
-                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"
-                  fill="#1C3B53"/>
-            </svg>
-          </view>
+<!--          <view style="position: relative; top: 1.6rem" @click="closeSharePopup">-->
+<!--            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">-->
+<!--              <path-->
+<!--                  d="M19 6.41L17.59 5L12 10.59L6.41 5L5 6.41L10.59 12L5 17.59L6.41 19L12 13.41L17.59 19L19 17.59L13.41 12L19 6.41Z"-->
+<!--                  fill="#1C3B53"/>-->
+<!--            </svg>-->
+<!--          </view>-->
           <!--Close Icon-->
 
-          <view style="text-align: center; font-size: 0.93rem; font-weight: 400; margin-bottom: 1rem;">
-            <span>ソーシャルログイン</span>
-          </view>
+<!--          <view style="text-align: center; font-size: 20px; font-weight: 400; margin-bottom: 17px;">-->
+<!--            <span>{{ curLoginTitle }}</span>-->
+<!--          </view>-->
+          <u--text :text="curLoginTitle" :size="20" align="center" style="margin-top: 10px;"></u--text>
+
           <view class="pop-login-list">
             <view class="sns-icon-area">
               <!--Google Icon-->
@@ -72,20 +74,20 @@
               <!--Twitter Icon-->
             </view>
             <view style="text-align: center; align-items: center; justify-content: center; font-size: 15px; font-weight: 400; width: 100%">
-              <view style="padding: 10px 40px">チェックイン機能を利用するにはサインインしてください。</view>
+              <view style="padding: 10px 40px">{{ loginText }}</view>
             </view>
           </view>
         </view>
       </u-popup>
 
       <view style="text-align: center; font-size: 15px; margin-top: 0.65rem; font-weight: 400; margin-bottom: 1rem;">
-        <span>SNSにシェアする</span>
+        <span>{{ SNSShareText }}</span>
       </view>
 
       <view>
-        <view style="font-size: 13px; color: #1C3B53; font-style: normal; margin-left: 3px;">達成状況</view>
+        <view style="font-size: 13px; color: #1C3B53; font-style: normal; margin-left: 3px;">{{ myStatus }}</view>
         <view style="font-size: 30px; color: #1C3B53; font-style: normal;">
-          🌍 世界遺産の旅
+          🌍 {{ myStatusContent }}
         </view>
 
 
@@ -95,10 +97,10 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6" text-align="left">
-                  <view style="font-size: 12px">グローバル</view>
+                  <view style="font-size: 12px">{{ continentGlobal }}</view>
                 </u-col>
                 <u-col span="5">
-                  <view style="font-size: 14px; font-weight: 700;text-align: right;color: #1C3B53">{{ selectedHeritageStatistics.rate }}</view>
+                  <view style="font-size: 14px; font-weight: 700;text-align: right;color: #1C3B53">{{ selectedDataStatistics.rate }}</view>
                 </u-col>
               </u-row>
             </u-col>
@@ -111,7 +113,7 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6" text-align="left">
-                  <view style="font-size: 12px; color: #1C3B53">ヨーロッパ</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentEurope }}</view>
                 </u-col>
                 <u-col span="5">
                   <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ EuropeCount }}</view>
@@ -121,7 +123,7 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6">
-                  <view style="font-size: 12px; color: #1C3B53">アフリカ</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentAfrica }}</view>
                 </u-col>
                 <u-col span="5">
                   <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ AfricaCount }}</view>
@@ -133,7 +135,7 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6" text-align="left">
-                  <view style="font-size: 12px; color: #1C3B53">アジア</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentAsia }}</view>
                 </u-col>
                 <u-col span="5">
                   <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ AsiaCount }}</view>
@@ -143,10 +145,10 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6">
-                  <view style="font-size: 12px; color: #1C3B53">北米・中米</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentNorthAmerica }}</view>
                 </u-col>
                 <u-col span="5">
-                  <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ NorthAmericaCount + CentralAmericaCount }}</view>
+                  <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ NorthAmericaCount }}</view>
                 </u-col>
               </u-row>
             </u-col>
@@ -155,7 +157,7 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6" text-align="left">
-                  <view style="font-size: 12px; color: #1C3B53">オセアニア</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentOceania }}</view>
                 </u-col>
                 <u-col span="5">
                   <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ OceaniaCount }}</view>
@@ -165,7 +167,7 @@
             <u-col span="6">
               <u-row>
                 <u-col span="6">
-                  <view style="font-size: 12px; color: #1C3B53">南米</view>
+                  <view style="font-size: 12px; color: #1C3B53">{{ continentSouthAmerica }}</view>
                 </u-col>
                 <u-col span="5">
                   <view style="font-size: 14px; font-weight: 700; text-align: right; color: #1C3B53">{{ SouthAmericaCount }}</view>
@@ -195,8 +197,8 @@
       </view>
 
       <view v-if="shareImgUrl" style="margin-top: 50px;">
-        <u-button type="primary" color="#1C3B53" text="SNSにシェアする" @click="shareToSNS"></u-button>
-        <u-button type="primary" color="#1C3B53" text="ギャラリーに保存する" style="margin-top: 10px" @click="showMapFlagImage"></u-button>
+        <u-button type="primary" color="#1C3B53" :text="SNSShareText" @click="shareToSNS"></u-button>
+        <u-button type="primary" color="#1C3B53" :text="saveToGalleryText" style="margin-top: 10px" @click="showMapFlagImage"></u-button>
       </view>
     </view>
 
@@ -205,7 +207,7 @@
 </template>
 
 <script>
-import {getContinent, getHeritage, getCheckInInfo} from '@/util/request/api.js';
+import {getListData, getCheckInInfo} from '@/util/request/api.js';
 import { Node, Canvas } from '@/pages/components/html2canvas/index';
 
 export default {
@@ -217,6 +219,7 @@ export default {
       selectedHeritageCount: 0,
       selectedHeritageList: [],
       countryHeritageList: [],
+      currentLanguage: 'jp',
       range: [
         {value: 0, text: '全て'}
       ],
@@ -229,12 +232,10 @@ export default {
       AsiaCount: 0,
       NorthAmericaCount: 0,
       OceaniaCount: 0,
-      CentralAmericaCount: 0,
       SouthAmericaCount: 0,
       // 已选中的数据
       selectCheckedIds: [],
-      // 已选中的遗产统计数据
-      selectedHeritageStatistics: {
+      selectedDataStatistics: {
         rate: '',
         continent_data_list: []
       },
@@ -246,7 +247,7 @@ export default {
       },
       center: {lat: 0, lng: 0},
       listQuery: {
-        heritage_ids: '',
+        select_ids: '',
       },
       shareImgUrl: '',
       pageImageUrl: '',
@@ -256,10 +257,128 @@ export default {
   computed: {
     isLogin() {
       return this.$store.state.isLogin;
-    }
+    },
+    myStatus() {
+      if (this.currentLanguage === 'jp') {
+        return ' 達成状況'
+      } else if (this.currentLanguage === 'en') {
+        return ' My Status'
+      } else {
+        return '达成状态'
+      }
+    },
+    myStatusContent() {
+      if (this.currentLanguage === 'jp') {
+        return ' 世界中の登録地'
+      } else if (this.currentLanguage === 'en') {
+        return ' Worldwide'
+      } else {
+        return ' 全球范围'
+      }
+    },
+    SNSShareText() {
+      if (this.currentLanguage === 'jp') {
+        return 'SNSにシェアする'
+      } else if (this.currentLanguage === 'en') {
+        return 'Share to SNS'
+      } else {
+        return '分享到SNS'
+      }
+    },
+    saveToGalleryText() {
+      if (this.currentLanguage === 'jp') {
+        return 'ギャラリーに保存する'
+      } else if (this.currentLanguage === 'en') {
+        return 'Save to Gallery'
+      } else {
+        return '保存到相册'
+      }
+    },
+    continentGlobal() {
+      if (this.currentLanguage === 'jp') {
+        return 'グローバル'
+      } else if (this.currentLanguage === 'en') {
+        return 'Global'
+      } else {
+        return '全球'
+      }
+    },
+    continentAsia() {
+      if (this.currentLanguage === 'jp') {
+        return 'アジア'
+      } else if (this.currentLanguage === 'en') {
+        return 'Asia'
+      } else {
+        return '亚洲'
+      }
+    },
+    continentEurope() {
+      if (this.currentLanguage === 'jp') {
+        return 'ヨーロッパ'
+      } else if (this.currentLanguage === 'en') {
+        return 'Europe'
+      } else {
+        return '欧洲'
+      }
+    },
+    continentAfrica() {
+      if (this.currentLanguage === 'jp') {
+        return 'アフリカ'
+      } else if (this.currentLanguage === 'en') {
+        return 'Africa'
+      } else {
+        return '非洲'
+      }
+    },
+    continentNorthAmerica() {
+      if (this.currentLanguage === 'jp') {
+        return '北米'
+      } else if (this.currentLanguage === 'en') {
+        return 'North America'
+      } else {
+        return '北美洲'
+      }
+    },
+    continentSouthAmerica() {
+      if (this.currentLanguage === 'jp') {
+        return '南米'
+      } else if (this.currentLanguage === 'en') {
+        return 'South America'
+      } else {
+        return '南美洲'
+      }
+    },
+    continentOceania() {
+      if (this.currentLanguage === 'jp') {
+        return 'オセアニア'
+      } else if (this.currentLanguage === 'en') {
+        return 'Oceania'
+      } else {
+        return '大洋洲'
+      }
+    },
+    curLoginTitle() {
+      if (this.currentLanguage === 'jp') {
+        return 'ソーシャルログイン'
+      } else if (this.currentLanguage === 'en') {
+        return 'Login With...'
+      } else {
+        return '社交账户登录'
+      }
+    },
+    loginText() {
+      if (this.currentLanguage === 'jp') {
+        return '登録機能を利用するにはログインしてください。'
+      } else if (this.currentLanguage === 'en') {
+        return 'Login to check-in the sites you have visited.'
+      } else {
+        return '若要使用地点打卡功能，您需要先登录。'
+      }
+    },
   },
   onLoad(options) {
-    this.listQuery.heritage_ids = options.params
+    this.listQuery.select_ids = options.params
+    this.currentLanguage = uni.getStorageSync('local_lang');
     this.getCheckInInformation(options.params)
   },
   async mounted() {
@@ -309,9 +428,10 @@ export default {
           this.showToast(response.msg)
         }
         if (response.code == 0) {
-          this.selectedHeritageStatistics = response.data
+          this.selectedDataStatistics = response.data
+          console.log(this.selectedDataStatistics);
           // 遍历该数据，为每个大洲变量赋值
-          this.selectedHeritageStatistics.continent_data_list.forEach((item, index) => {
+          this.selectedDataStatistics.continent_data_list.forEach((item, index) => {
             if (item.name_en === "Europe") {
               this.EuropeCount = item.count
             }
@@ -329,9 +449,6 @@ export default {
             }
             if (item.name_en === "Oceania") {
               this.OceaniaCount = item.count
-            }
-            if (item.name_en === "Central America") {
-              this.CentralAmericaCount = item.count
             }
           })
           // 生成分享图片的背景图片
@@ -360,7 +477,7 @@ export default {
       ctx.drawImage('../../static/images/share_page_map_states_flag.png', SouthAmericaFlagX, 90, 24, 24);
       ctx.font = 'bold 13px Arial';
       let SouthAmericaCountX = 68;
-      let SouthAndCentralAmericaCount = this.NorthAmericaCount + this.CentralAmericaCount
+      let SouthAndCentralAmericaCount = this.NorthAmericaCount
       if (SouthAndCentralAmericaCount < 10 && SouthAndCentralAmericaCount >= 0) {
         SouthAmericaCountX = 68;
       } else if (SouthAndCentralAmericaCount >= 10 && SouthAndCentralAmericaCount < 100) {
@@ -481,46 +598,47 @@ export default {
       const ctx = uni.createCanvasContext("canvas-share");
       ctx.fillStyle = "#1C3B53"; // 设置文本颜色
       ctx.font = "14px Arial"; // 设置字体样式和大小
-      ctx.fillText("達成状況", 22, 20); // 绘制文本
+      ctx.fillText(this.myStatus, 22, 20); // 绘制文本
 
       ctx.font = "30px Arial"; // 设置字体样式和大小
-      ctx.fillText("🌍 世界遺産の旅", 18, 54); // 绘制文本
+      ctx.fillText("🌍 " + this.myStatusContent, 18, 54); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("グローバル", 22, 90); // 绘制文本
+      ctx.fillText(this.continentGlobal, 22, 90); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
-      ctx.fillText(this.selectedHeritageStatistics.rate, 120, 90); // 绘制文本
+      ctx.fillText(this.selectedDataStatistics.rate, 120, 90); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("ヨーロッパ", 22, 120); // 绘制文本
+      ctx.fillText(this.continentEurope, 22, 120); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
       ctx.fillText(this.EuropeCount, 165, 120); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("アフリカ", 220, 120); // 绘制文本
+      ctx.fillText(this.continentAfrica, 220, 120); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
       ctx.fillText(this.AfricaCount, 340, 120); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("アジア", 22, 150); // 绘制文本
+      ctx.fillText(this.continentAsia, 22, 150); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
       ctx.fillText(this.AsiaCount, 165, 150); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("北米・中米", 220, 150); // 绘制文本
+      ctx.fillText(this.continentNorthAmerica, 220, 150); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
-      ctx.fillText(this.NorthAmericaCount + this.CentralAmericaCount, 340, 150); // 绘制文本
+      ctx.fillText(this.NorthAmericaCount, 340, 150); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("オセアニア", 22, 180); // 绘制文本
+      ctx.fillText(this.continentOceania, 22, 180); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
       ctx.fillText(this.OceaniaCount, 165, 180); // 绘制文本
 
       ctx.font = "13px Arial"; // 设置字体样式和大小
-      ctx.fillText("南米", 220, 180); // 绘制文本
+      ctx.fillText(this.continentSouthAmerica, 220, 180); // 绘制文本
       ctx.font = "bold 16px Arial"; // 设置粗体样式和大小
       ctx.fillText(this.SouthAmericaCount, 340, 180); // 绘制文本
 
+      // TODO 修改为配置项
       ctx.fillText('世界遺産の旅', 22, 550); // 绘制文本
       ctx.fillText('Doyounknowtheway.jp', 22, 570); // 绘制文本
 
@@ -534,7 +652,7 @@ export default {
       ctx.drawImage('../../static/images/share_page_map_states_flag.png', SouthAmericaFlagX, 300, 24, 24);
       ctx.font = 'bold 13px Arial';
       let SouthAmericaCountX = 66;
-      let SouthAndCentralAmericaCount = this.NorthAmericaCount + this.CentralAmericaCount
+      let SouthAndCentralAmericaCount = this.NorthAmericaCount
       if (SouthAndCentralAmericaCount < 10 && SouthAndCentralAmericaCount >= 0) {
         SouthAmericaCountX = 66;
       } else if (SouthAndCentralAmericaCount >= 10 && SouthAndCentralAmericaCount < 100) {
@@ -695,12 +813,13 @@ export default {
 
 /* 社交网络btn样式 */
 .sns-login-top {
-  margin-top: 0.6rem;
+  margin-top: 13px;
 }
 
 /* 弹窗样式 */
 .pop-login-list {
   width: 100%;
-  height: 12rem;
+  height: 230px;
+  margin-top: 20px;
 }
 </style>

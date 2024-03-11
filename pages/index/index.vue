@@ -30,27 +30,21 @@
     <!-- 达成状况 -->
     <view class="achievement-box">
       <view class="achievement-box-content">
-        <u-row style="height: 70px; padding: 0 10px ">
+        <u-row style="height: 70px; padding: 0 10px">
           <u-col :span="isLogin ? 8 : 12">
             <u-row style="padding: 5px 0;">
               <u-col>
-                <span v-if="currentLanguage === 'jp'" style="font-size: 13px;font-weight: 700;">🌍 達成状況</span>
-                <span v-if="currentLanguage === 'cn'" style="font-size: 13px;font-weight: 700;">🌍 达成情况</span>
-                <span v-if="currentLanguage === 'en'" style="font-size: 13px;font-weight: 700;">🌍 My Status</span>
+                <span style="font-size: 13px;font-weight: 700;">🌍 {{ myStatus }}</span>
               </u-col>
             </u-row>
             <u-row style="padding: 5px 0;">
               <u-col>
                 <view v-if="isLogin">
-                  <span v-if="currentLanguage === 'jp'" style="font-size: 13px;font-weight: 400;">グローバルチェックイン</span>
+                  <span style="font-size: 13px;font-weight: 400;">{{ globalCheckIn }}</span>
                 </view>
                 <view v-else style="font-size: 12px;font-weight: 400;">
-                  <span @click="showSNSLogin" v-if="currentLanguage === 'jp'" class="achievement-box-subtitle-unlogin">サインアップ</span>
-                  <span @click="showSNSLogin" v-if="currentLanguage === 'en'" class="achievement-box-subtitle-unlogin">Sign-up</span>
-                  <span @click="showSNSLogin" v-if="currentLanguage === 'cn'" class="achievement-box-subtitle-unlogin">登录</span>
-                  <span v-if="currentLanguage === 'jp'" class="achievement-box-subtitle-unlogin-content">してチェックインする</span>
-                  <span v-if="currentLanguage === 'en'" class="achievement-box-subtitle-unlogin-content">to see my check-in status</span>
-                  <span v-if="currentLanguage === 'cn'" class="achievement-box-subtitle-unlogin-content">查看达成情况</span>
+                  <span @click="showSNSLogin" class="achievement-box-subtitle-unlogin">{{ signUp }}</span>
+                  <span class="achievement-box-subtitle-unlogin-content">{{ signUpContent }}</span>
                 </view>
               </u-col>
             </u-row>
@@ -63,7 +57,7 @@
             </u-row>
             <u-row>
               <u-col textAlign="right">
-                <span style="font-size: 13px;font-style: normal; font-weight: 700">/{{ heritageTotal }}</span>
+                <span style="font-size: 13px;font-style: normal; font-weight: 700">/{{ dataTotal }}</span>
               </u-col>
             </u-row>
           </u-col>
@@ -114,17 +108,15 @@ import {getGoogleMapsAPI} from 'gmap-vue';
 import config from '@/common/config'
 import {
   getUserInfo,
-  getHeritageCount,
   getUserCheckInCount,
-  getUserCheckInHeritage,
-  getHeritageCountryCount,
-  getAllHeritage,
-  getHeritageByLocation
+  getUserCheckInData,
+  getUserTokenByTokenKey,
+  getDataByLocation
 } from '@/util/request/api.js';
 import tab_list_en from "@/common/tab_list_en.json";
 import tab_list_jp from "@/common/tab_list_jp.json";
 import tab_list_cn from "@/common/tab_list_cn.json";
-import heritage_country_count from "@/common/heritage_country_count.json";
+import {s3Path} from "@/common/config";
 export default {
   data() {
     return {
@@ -134,6 +126,12 @@ export default {
       deviceType: 'phone',
       markersLoaded: false,
       aboutPopupShow: false,
+      dataDetailRedirectRul: '',
+      tabListData: [],
+      allIndexData: [],
+      userCheckInTotal: 0,
+      dataTotal: 0,
+      currentLanguage: 'cn',
       userInfo: {
         id: '',
         name: '',
@@ -145,94 +143,13 @@ export default {
         width: '100%',
         height: '650px',
       },
-      tabListData: [],
-      userCheckInTotal: 0,
-      heritageTotal: 0,
-      currentLanguage: 'cn',
-      styles: [
-        {
-          featureType: "water",
-          stylers: [{color: "#FFFFFF"}],
-        },
-        {
-          "elementType": "labels",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative",
-          "elementType": "geometry",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "administrative.neighborhood",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "poi",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "road",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "road",
-          "elementType": "labels.icon",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "transit",
-          "stylers": [
-            {
-              "visibility": "off"
-            }
-          ]
-        },
-        {
-          "featureType": "landscape",
-          "stylers": [
-            {
-              "color": "#7d78b8"
-            }
-          ]
-        },
-      ],
     };
   },
   onLoad(options) {
     let systemInfo = uni.$u.sys()
     this.deviceType = systemInfo.deviceType
-    if (options.token && !this.isLogin) {
-      // 再判断是否是同一个设备
-      // if (device_id === options.device_id) {
-        // 代表登录成功
-        uni.setStorageSync('auth_token', options.token);
-        this.getUserInfo(options.login_type);
-      // }
+    if (options.token_key && !this.isLogin) {
+      this.getUserTokenKey(options.login_type, options.token_key);
     }
     this.currentLanguage = uni.getStorageSync('local_lang');
     if (this.currentLanguage === 'jp') {
@@ -244,22 +161,54 @@ export default {
     }
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
-      this.getUserCheckInHeritageCount()
+      this.getUserCheckInDataCount()
     }
-    this.getHeritageCount()
+    // TODO 临时使用
+    // this.dataDetailRedirectRul = `${config.baseUrl}client/#/pages/index/detail?id=`
+    this.dataDetailRedirectRul = `http://192.168.0.106:8080/#/pages/index/detail?id=`
+    this.getCommonData()
   },
   computed: {
     google: getGoogleMapsAPI,
     isLogin() {
       return this.$store.state.isLogin;
-    }
-  },
-  watch: {
-    google: function (newObj, oldObj) {
-      if (newObj) {
-        window.initMap = this.initMap();
+    },
+    myStatus() {
+      if (this.currentLanguage === 'jp') {
+        return ' 達成状況'
+      } else if (this.currentLanguage === 'en') {
+        return ' My Status'
+      } else {
+        return '达成状态'
       }
-    }
+    },
+    signUp() {
+      if (this.currentLanguage === 'jp') {
+        return 'ログイン'
+      } else if (this.currentLanguage === 'en') {
+        return 'Sign-up'
+      } else {
+        return '登录'
+      }
+    },
+    signUpContent() {
+      if (this.currentLanguage === 'jp') {
+        return 'して登録する'
+      } else if (this.currentLanguage === 'en') {
+        return 'to view my check-in status'
+      } else {
+        return '来查看我的打卡记录'
+      }
+    },
+    globalCheckIn() {
+      if (this.currentLanguage === 'jp') {
+        return ' 世界中の登録地'
+      } else if (this.currentLanguage === 'en') {
+        return ' Worldwide'
+      } else {
+        return ' 全球范围'
+      }
+    },
   },
   async mounted() {
     await this.$gmapApiPromiseLazy();
@@ -270,30 +219,35 @@ export default {
         that.mapStyle.height = (res.windowHeight - 40) + 'px';
       }
     });
-
-    this.initMap();
+    await this.initMap();
   },
   methods: {
+    getCommonData() {
+      let requestUrl = `${s3Path}common_data.json`
+      uni.$u.http.get(requestUrl).then(res => {
+        this.dataTotal = res.total_data_count
+      })
+    },
     closeAboutPopup() {
       this.aboutPopupShow = false
     },
-    // 获取遗迹总数量
-    async getHeritageCount() {
-      await getHeritageCount().then((response) => {
-        this.heritageTotal = response.data
-      })
-    },
-    // 获取用户CheckIn总数
-    getUserCheckInHeritageCount() {
+    getUserCheckInDataCount() {
       getUserCheckInCount({ custom: { auth: true }}).then((response) => {
         this.userCheckInTotal = response.data
       })
     },
-    getUserInfo(login_type) {
-      uni.showLoading({
-        title: 'Loading'
-      });
-      getUserInfo({ custom: { auth: true, login_type: login_type }}).then((response) => {
+    getUserTokenKey(login_type, token_key) {
+      getUserTokenByTokenKey({ params: { login_type: login_type , token_key: token_key}}).then((response) => {
+        if (response.data) {
+          uni.setStorageSync('auth_token', response.data);
+          this.getUserInfoByToken(response.data.login_type, response.data.token_key)
+        }
+      })
+    },
+    getUserInfoByToken(login_type, token_key) {
+
+      uni.showLoading({ title: 'Loading' });
+      getUserInfo({ custom: { auth: true, login_type: login_type , token_key: token_key}}).then((response) => {
         this.$store.commit('login', response);
         this.userInfo = response.data.user;
         this.initMap()
@@ -303,7 +257,8 @@ export default {
     showSNSLogin() {
       this.$refs.tabList.showMobileSNSLogin()
     },
-    initMap() {
+    async initMap() {
+      let allIndexCountryData = await getIndexJsonData(); // 使
       let that = this
       that.map = new google.maps.Map(document.getElementById("map"), {
         center: this.center,
@@ -331,32 +286,25 @@ export default {
       });
 
       let map = that.map
-      let countryHeritageData = [];   // 国家遗迹数量
-      let countryHeritageMarkers = []; // 国家遗迹数量Marker
-      let heritageData = [];
-      let heritageMarkers = [];
-      let heritageBigMarkers = [];
+      let countryIndexData = [];   // 国家数据数量
+      let countryDataMarkers = [];
+      let indexData = [];
+      let indexDataMarkers = [];
+      let indexDataBigMarkers = [];
       let previousZoom = 0; // 用于记录前一个缩放级别
       let previousUserCenter = that.center // // 用于记录前一个用户中心点的坐标
 
 
       if (that.isLogin) {
-        getUserCheckInHeritage().then((response) => {
+        getUserCheckInData().then((response) => {
           if (response.code === 0) {
-            countryHeritageData = response.data
-            showCountryHeritageMarker()
+            countryIndexData = response.data
+            showCountryDataMarker()
           }
         })
       } else {
-        countryHeritageData = heritage_country_count
-        showCountryHeritageMarker()
-        // 未登录时，使用本地数据
-        // getHeritageCountryCount().then((response) => {
-        //   if (response.code === 0) {
-        //     countryHeritageData = heritage_country_count
-        //     showCountryHeritageMarker()
-        //   }
-        // })
+        countryIndexData = allIndexCountryData
+        showCountryDataMarker()
       }
 
       const infoWindow = new google.maps.InfoWindow();
@@ -398,24 +346,24 @@ export default {
         if (currentZoom >= 5 && currentZoom < 6) {
           loadMarkers(map)
           setCountryMarkerView(false)
-          setHeritageMarkerView(true)
-          setHeritageBigMarkerView(false)
+          setDataMarkerView(true)
+          setDataBigMarkerView(false)
         } else if (currentZoom >= 6) {
           setCountryMarkerView(false)
-          setHeritageMarkerView(false)
-          setHeritageBigMarkerView(true)
+          setDataMarkerView(false)
+          setDataBigMarkerView(true)
         } else {
           setCountryMarkerView()
-          setHeritageMarkerView(false)
-          setHeritageBigMarkerView(false)
+          setDataMarkerView(false)
+          setDataBigMarkerView(false)
           that.markersLoaded = false
         }
 
       });
 
       // 加载国家遗迹点数据
-      function showCountryHeritageMarker() {
-        countryHeritageData.forEach((property, index) => {
+      function showCountryDataMarker() {
+        countryIndexData.forEach((property, index) => {
           if (property.latitude !== '' && property.longitude !== '') {
             let position = { lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }
             const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
@@ -424,13 +372,13 @@ export default {
               position: position,
               title: property.description,
             });
-            countryHeritageMarkers.push(advancedMarkerView);
+            countryDataMarkers.push(advancedMarkerView);
           }
         });
       }
-      // 加载遗迹点数据
+      // 加载坐标点数据
       function loadMarkers(map) {
-        // 在这里编写加载遗迹点数据的代码
+        // 在这里编写加载坐标点数据的代码
         // 包括发起异步请求获取数据、处理数据、渲染标记点等步骤
         // 注意避免重复加载数据
         // 获取当前地图视口的经纬度范围
@@ -452,26 +400,24 @@ export default {
         // 禁用用户操作
         disableUserInteraction();
         // 显示加载中提示
-        uni.showLoading({
-          title: 'Loading'
-        });
+        uni.showLoading({ title: 'Loading' });
 
-        getHeritageByLocation({params: viewportData}).then((response) => {
+        getDataByLocation({params: viewportData}).then((response) => {
           if (response.code === 0) {
-            heritageData = response.data
-            if (heritageData.length) {
+            indexData = response.data
+            if (indexData.length) {
               that.markersLoaded = true; // 标记遗迹点数据已加载
             }
-            heritageData.forEach((property, index) => {
+            indexData.forEach((property, index) => {
               if (property.latitude !== '' && property.longitude !== '') {
                 let position = { lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }
                 const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
                   map,
-                  content: buildHeritageMark(property, index),
+                  content: buildDataMark(property, index),
                   position: position,
                   title: property.description,
                 });
-                heritageMarkers.push(advancedMarkerView);
+                indexDataMarkers.push(advancedMarkerView);
               }
             });
           }
@@ -485,32 +431,32 @@ export default {
       // 处理国家级别的标签
       function setCountryMarkerView(is_show = true) {
         if (is_show) {
-          countryHeritageMarkers.forEach((marker) => {
+          countryDataMarkers.forEach((marker) => {
             marker.setMap(map);
           });
         } else {
-          countryHeritageMarkers.forEach((marker) => {
+          countryDataMarkers.forEach((marker) => {
             marker.setMap(null);
           });
         }
       }
       // 处理遗迹的标签
-      function setHeritageMarkerView(is_show = true) {
+      function setDataMarkerView(is_show = true) {
         if (is_show) {
-          heritageData.forEach((property, index) => {
+          indexData.forEach((property, index) => {
             if (property.latitude !== '' && property.longitude !== '') {
               let position = { lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }
               const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
                 map,
-                content: buildHeritageMark(property, index),
+                content: buildDataMark(property, index),
                 position: position,
                 title: property.description,
               });
-              heritageMarkers.push(advancedMarkerView);
+              indexDataMarkers.push(advancedMarkerView);
             }
           });
         } else {
-          heritageMarkers.forEach((marker) => {
+          indexDataMarkers.forEach((marker) => {
             marker.setMap(null);
           });
         }
@@ -554,6 +500,7 @@ export default {
       // 处理移动端遗迹可点击的标签
       function mobileClickContent(property) {
         let svg = ''
+        let hrefUrl = `${that.dataDetailRedirectRul}${property.id}`
         if (property.category === 'Cultural') {
           svg = `<div style="display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="8" cy="8" r="8" fill="#A57AED"/>
@@ -574,12 +521,10 @@ export default {
     <circle cx="11" cy="10" r="2" fill="white"/>
   </svg></div>`
         }
-
         let start_content = `<div style="display: flex; justify-content: flex-start; align-items: center; text-align: center;" @click="infoClick">`
-        // TODO 这里的域名要替换为实际的域名
         let middle_content = `<div style="margin-left: 12px; font-size: 14px; font-weight: 700; text-align: center;">${property.name_jp}</div></div>
                     <div style="display: flex;">
-                    <div><a href="https://world-heritage-d0047ce80266.herokuapp.com/client/#/pages/index/detail?id=${property.id}">${property.states_name_jp}</a></div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>
+                    <div><a href="${hrefUrl}">${property.states_name_jp}</a></div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>
 </div>
                 `
 
@@ -588,14 +533,14 @@ export default {
         return start_content + svg + middle_content + end_content
       }
       // 处理遗迹可点击的标签
-      function setHeritageBigMarkerView(is_show = true) {
+      function setDataBigMarkerView(is_show = true) {
         if (is_show) {
-          heritageData.forEach((property, index) => {
+          indexData.forEach((property, index) => {
             if (property.latitude !== '' && property.longitude !== '') {
               let position = { lat: parseFloat(property.latitude), lng: parseFloat(property.longitude) }
               const advancedMarkerView = new google.maps.marker.AdvancedMarkerView({
                 map,
-                content: buildHeritageBigMark(property, index),
+                content: buildDataBigMark(property, index),
                 position: position,
                 title: property.description,
               });
@@ -610,16 +555,16 @@ export default {
                 infoWindow.setContent(content);
                 infoWindow.open(advancedMarkerView.map, advancedMarkerView);
               });
-              heritageBigMarkers.push(advancedMarkerView);
+              indexDataBigMarkers.push(advancedMarkerView);
             }
           });
         } else {
-          heritageBigMarkers.forEach((marker) => {
+          indexDataBigMarkers.forEach((marker) => {
             marker.setMap(null);
           });
         }
       }
-      function buildHeritageMark() {
+      function buildDataMark() {
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         svg.setAttribute("xmlns", "http://www.w3.org/2000/svg");
         svg.setAttribute("width", "8");
@@ -638,7 +583,7 @@ export default {
         svg.appendChild(circle);
         return svg
       }
-      function buildHeritageBigMark(property) {
+      function buildDataBigMark(property) {
 
         // 创建SVG元素
         const svg2 = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -702,16 +647,27 @@ export default {
       function toRadians(degrees) {
         return degrees * (Math.PI/180);
       }
+
+      function getIndexJsonData() {
+        return new Promise((resolve, reject) => {
+          let requestUrl = `${s3Path}index/index_country_data_count.json`;
+          uni.$u.http.get(requestUrl).then(res => {
+            resolve(res);
+          }).catch(error => {
+            reject(error);
+          });
+        });
+      }
     },
     buildContent(property, index) {
-      const priceTag = document.createElement("div");
-      priceTag.className = "price-tag";
+      const markerTag = document.createElement("div");
+      markerTag.className = "price-tag";
       if (this.isLogin) {
-        priceTag.textContent = `${property.check_count}/${property.count}`;
+        markerTag.textContent = `${property.check_count}/${property.count}`;
       } else {
-        priceTag.textContent = `0/${property.count}`;
+        markerTag.textContent = `0/${property.app_data_count}`;
       }
-      return priceTag;
+      return markerTag;
     },
     googleLogin() {
       window.location.href = config.googleAuthenticationUrl + '?page=' + uni.$u.page()
