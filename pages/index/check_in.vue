@@ -671,11 +671,14 @@ export default {
     scrollInit() {
       this.scrollViewHeight = uni.$u.sys().windowHeight - 100
     },
-    // 遗迹大洲切换
+    // 国家切换
     countryChange(e) {
       this.checkInListData = []
       this.listQuery.country = e
-      if ((e === 'All' || e === '') && (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '')) {
+      if (
+          (e === 'All' || e === '' || e === 0) &&
+          (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '' || this.listQuery.category_sub === 0)
+      ) {
         this.checkInListLimit = 10;
         this.checkInListData = this.checkInListAllData.slice(0, this.checkInListLimit);
       } else {
@@ -685,14 +688,17 @@ export default {
     categorySubChange(e) {
       this.checkInListData = []
       this.listQuery.category_sub = e
-      if ((e === 'All' || e === '') && (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '')) {
+      if (
+          (e === 'All' || e === '' || e === 0) &&
+          (this.listQuery.country === 'All' || this.listQuery.country === '' || this.listQuery.country === 0)
+      ) {
         this.checkInListLimit = 10;
         this.checkInListData = this.checkInListAllData.slice(0, this.checkInListLimit);
       } else {
         this.requestListData();
       }
     },
-    // 遗迹点击事件
+    // 点击事件
     appDataClick(appDataItem, appDataIndex, countryIndex) {
       this.$set(
           this.checkInListData[countryIndex].app_data[appDataIndex],
@@ -733,12 +739,12 @@ export default {
         uni.hideLoading()
       })
     },
-    // 遗迹选择框确认按钮
+    // 选择框确认按钮
     confirmSelected() {
       this.selectedListData = this.selectedListData.filter(item => item.is_checked)
       this.popupShow = false
     },
-    // 已选择的遗迹的点击事件,
+    // 已选择的点击事件,
     selectAppDataClick(appDataItem) {
       appDataItem.is_checked = !appDataItem.is_checked
       appDataItem.is_selected = !appDataItem.is_selected

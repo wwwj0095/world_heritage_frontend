@@ -164,8 +164,8 @@ export default {
       this.getUserCheckInDataCount()
     }
     // TODO 临时使用
-    // this.dataDetailRedirectRul = `${config.baseUrl}client/#/pages/index/detail?id=`
-    this.dataDetailRedirectRul = `http://192.168.0.106:8080/#/pages/index/detail?id=`
+    this.dataDetailRedirectRul = `${config.baseUrl}client/#/pages/index/detail?id=`
+    // this.dataDetailRedirectRul = `http://192.168.0.106:8080/#/pages/index/detail?id=`
     this.getCommonData()
   },
   computed: {
@@ -501,19 +501,42 @@ export default {
       function mobileClickContent(property) {
         let svg = ''
         let hrefUrl = `${that.dataDetailRedirectRul}${property.id}`
-        if (property.category === 'Cultural') {
+
+        let country_name = property.country.map((item) => {
+          if (that.currentLanguage === 'jp') {
+            return item.name_jp
+          } else if (that.currentLanguage === 'en') {
+            return item.name_en
+          } else {
+            return item.name_cn
+          }
+        }).join('、')
+        let date_inscribed = property.additional_info.date_inscribed
+        let date_inscribed_text = ''
+        let property_name = ''
+        if (that.currentLanguage === 'jp') {
+          date_inscribed_text = '登録年: ' + date_inscribed
+          property_name = property.name_jp
+        } else if (that.currentLanguage === 'en') {
+          date_inscribed_text = 'Date inscribed: ' + date_inscribed
+          property_name = property.name_en
+        } else {
+          date_inscribed_text = '登记年份: ' + date_inscribed
+          property_name = property.name_cn
+        }
+        if (property.additional_info.category && property.additional_info.category === 'Cultural') {
           svg = `<div style="display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="8" cy="8" r="8" fill="#A57AED"/>
     <path d="M4.84211 6.85714V9.85714H6.10526V6.85714H4.84211ZM7.36842 6.85714V9.85714H8.63158V6.85714H7.36842ZM4 12H12V10.7143H4V12ZM9.89474 6.85714V9.85714H11.1579V6.85714H9.89474ZM8 3L4 5.14286V6H12V5.14286L8 3Z" fill="white"/>
   </svg></div>`
         }
-        if (property.category === 'Natural') {
+        if (property.additional_info.category && property.additional_info.category === 'Natural') {
           svg = `<div style="display: flex; align-items: center;"><svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <ellipse cx="9.08523" cy="8" rx="8.21951" ry="8" fill="#4E9CA1"/>
     <path fill-rule="evenodd" clip-rule="evenodd" d="M11.2831 3.92202C10.9684 4.10451 10.8606 4.50867 11.0423 4.82474L12.1387 6.73242C12.3204 7.0485 12.7228 7.1568 13.0374 6.97431C13.3521 6.79182 13.4599 6.38766 13.2782 6.07158L12.1818 4.1639C12.0001 3.84783 11.5977 3.73953 11.2831 3.92202ZM10.3948 4.94594L7.13443 6.83679C6.71489 7.08011 6.57114 7.61899 6.81337 8.04043L6.87591 8.14924L6.86826 8.15354L5.25258 9.09055L5.08474 8.79852C4.99817 8.6479 4.80253 8.59411 4.64778 8.67837C4.49302 8.76263 4.43775 8.95304 4.52432 9.10366L5.1822 10.2483C5.26878 10.3989 5.46441 10.4527 5.61917 10.3684C5.77392 10.2842 5.8292 10.0938 5.74262 9.94313L5.56621 9.6362L7.18948 8.6948L7.25195 8.8035C7.49418 9.22493 8.03065 9.36933 8.4502 9.12601L9.03682 8.7858L7.33032 12.0241C7.24939 12.1777 7.31169 12.3661 7.46948 12.4448C7.62726 12.5236 7.82077 12.4629 7.90169 12.3094L9.80895 8.69008L11.7162 12.3094C11.7971 12.4629 11.9906 12.5236 12.1484 12.4448C12.3062 12.3661 12.3685 12.1777 12.2876 12.0241L10.2196 8.09985L11.7157 7.2322C11.6647 7.17256 11.6187 7.10757 11.5784 7.03755L10.482 5.12987C10.4476 5.0701 10.4186 5.0086 10.3948 4.94594Z" fill="white"/>
   </svg></div>`
         }
-        if (property.category === 'Mixed') {
+        if (property.additional_info.category && property.additional_info.category === 'Mixed') {
           svg = `<div style="display: flex; align-items: center;"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="8" cy="8" r="8" fill="#82A0EE"/>
     <circle cx="8" cy="5" r="2" fill="white"/>
@@ -522,9 +545,9 @@ export default {
   </svg></div>`
         }
         let start_content = `<div style="display: flex; justify-content: flex-start; align-items: center; text-align: center;" @click="infoClick">`
-        let middle_content = `<div style="margin-left: 12px; font-size: 14px; font-weight: 700; text-align: center;">${property.name_jp}</div></div>
+        let middle_content = `<div style="margin-left: 12px; font-size: 14px; font-weight: 700; text-align: center;"><a style="text-decoration: none" href="${hrefUrl}">${property_name}</a></div></div>
                     <div style="display: flex;">
-                    <div><a href="${hrefUrl}">${property.states_name_jp}</a></div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">登録年: ${property.date_inscribed}</div>
+                    <div>${country_name}</div><span style="margin-left: 10px"> | </span><div style="font-size: 13px; margin-left: 10px;">${date_inscribed_text}</div>
 </div>
                 `
 

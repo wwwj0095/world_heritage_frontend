@@ -39,7 +39,7 @@
                   :clear="true"
                   :localdata="categoryMainData"
                   :placeholder="categoryMainPlaceholder"
-                  @change="countrySelectDataChange"
+                  @change="countryChange"
               ></uni-data-select>
             </view>
             <!-- 下拉选择框区域 -->
@@ -50,7 +50,7 @@
             <!-- 下拉选择框区域 -->
             <view class="select-area" style="margin-top: 10px; padding: 0 0 0 3px">
               <uni-data-select
-                  v-model="listQuery.category"
+                  v-model="listQuery.category_sub"
                   :clear="true"
                   :localdata="categorySubData"
                   :placeholder="categorySubPlaceholder"
@@ -76,7 +76,7 @@
 			    }"
           scroll-y="true"
           class="scroll-Y"
-          @scrolltolower="lower" @scroll="scroll">
+          @scrolltolower="scrolltolower" @scroll="scroll">
         <view v-for="(country, countryIndex) in listData" :key="countryIndex">
           <view>
             <i v-if="country.name_en === 'China'" :class="`em em-${country.iso_code}`" aria-role="presentation" style="height: 30rpx;width: 35rpx;  margin-right: 15rpx;"></i>
@@ -173,12 +173,9 @@ export default {
         avatar: ''
       },
       listQuery: {
-        page: 1,
-        limit: 10,
         keyword: '',
-        category: '',
         country: '',
-        letter: 'A'
+        category_sub: ''
       },
       indexList: ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"],
       indexListIndex: 0,
@@ -224,14 +221,14 @@ export default {
   methods: {
     // 获取左侧筛选数据
     getCategoryMainJson() {
-      let requestUrl = `${s3Path}list/category_main_${this.currentLanguage}.json?time=` + new Date().getTime()
+      let requestUrl = `${s3Path}country_${this.currentLanguage}.json?time=` + new Date().getTime()
       uni.$u.http.get(requestUrl).then(res => {
         this.categoryMainData = res
       })
     },
     // 获取右侧筛选数据
     getCategorySubJson() {
-      let requestUrl = `${s3Path}list/category_sub_${this.currentLanguage}.json?time=` + new Date().getTime()
+      let requestUrl = `${s3Path}category/category_sub_${this.currentLanguage}.json?time=` + new Date().getTime()
       uni.$u.http.get(requestUrl).then(res => {
         this.categorySubData = res
       })
@@ -281,14 +278,8 @@ export default {
       })
       getListData({params: this.listQuery})
           .then(response => {
-            if (response.data.heritage_list.length === 0) {
-              uni.hideLoading()
-              return false
-            } else {
-              this.listData = this.listData.concat(response.data.heritage_list)
-              // this.indexList = response.data.heritage_list_country_first_letter_index
-              uni.hideLoading()
-            }
+            this.listData = this.listData.concat(response.data)
+            uni.hideLoading()
           })
           .catch(error => {
             uni.hideLoading()
@@ -316,16 +307,34 @@ export default {
     // 国家分类选择
     countrySelectDataChange(e) {
       this.listQuery.country = e
-      this.listQuery.letter = 'A'
       this.listData = []
       this.getAppDataList()
     },
-    // 遗产分类选择
-    categorySelectDataChange(e) {
-      this.listQuery.category = e
-      this.listQuery.letter = 'A'
+    countryChange(e) {
       this.listData = []
-      this.getAppDataList()
+      this.listQuery.country = e
+      if (
+          (e === 'All' || e === '' || e === 0) &&
+          (this.listQuery.category_sub === 'All' || this.listQuery.category_sub === '' || this.listQuery.category_sub === 0)
+      ) {
+        this.listLimit = 10;
+        this.listData = this.allListData.slice(0, this.listLimit);
+      } else {
+        this.getAppDataList();
+      }
+    },
+    categorySelectDataChange(e) {
+      this.listData = []
+      this.listQuery.category_sub = e
+      if (
+          (e === 'All' || e === '' || e === 0) &&
+          (this.listQuery.country === 'All' || this.listQuery.country === '' || this.listQuery.country === 0)
+      ) {
+        this.listLimit = 10;
+        this.listData = this.allListData.slice(0, this.listLimit);
+      } else {
+        this.getAppDataList();
+      }
     },
     listItemClick(e) {
       uni.$u.route({
@@ -351,27 +360,9 @@ export default {
         uni.hideLoading()
       })
     },
-    lower: function(e) {
-      // 如果到底了, 那么就加载更多数据
-      this.indexListIndex++
-      this.listQuery.letter = this.indexList[this.indexListIndex]
-      this.getAppDataList()
-    },
     scroll: function(e) {
-      // console.log(e)
       this.old.scrollTop = e.detail.scrollTop
     },
-    goTop: function(e) {
-      // 解决view层不同步的问题
-      this.scrollTop = this.old.scrollTop
-      this.$nextTick(function() {
-        this.scrollTop = 0
-      });
-      uni.showToast({
-        icon: "none",
-        title: "纵向滚动 scrollTop 值已被修改为 0"
-      })
-    }
   },
 }
 </script>
