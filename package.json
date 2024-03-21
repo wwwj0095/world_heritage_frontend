@@ -9,6 +9,7 @@
 	},
 	"dependencies": {
 		"@googlemaps/js-api-loader": "^1.16.2",
+		"cesium": "^1.115.0",
 		"css-font-parser": "^2.0.0",
 		"firebase": "^10.7.1",
 		"firebaseui": "^6.1.0",

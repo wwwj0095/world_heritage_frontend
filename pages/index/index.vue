@@ -290,24 +290,51 @@ export default {
       let countryDataMarkers = [];
       let indexData = [];
       let indexDataMarkers = [];
+      let featureLayer;
+      let infoWindow;
+      let clickedPolygon;
       let indexDataBigMarkers = [];
       let previousZoom = 0; // 用于记录前一个缩放级别
       let previousUserCenter = that.center // // 用于记录前一个用户中心点的坐标
 
+      // Stroke and fill with minimum opacity value.
+      //@ts-ignore
+      const styleDefault = {
+        strokeColor: "#810FCB",
+        strokeOpacity: 0.1,
+        strokeWeight: 0.1,
+        fillColor: "white",
+        fillOpacity: 0.1, // Polygons must be visible to receive click events.
+      };
+      // Style for the clicked Administrative Area Level 2 polygon.
+      //@ts-ignore
+      const styleClicked = {
+        ...styleDefault,
+        fillColor: "#810FCB",
+        fillOpacity: 0.5,
+      };
+
+
+      infoWindow = new google.maps.InfoWindow();
+      // Add the feature layer.
+      //@ts-ignore
+      featureLayer = map.getFeatureLayer("ADMINISTRATIVE_AREA_LEVEL_1");
+      // Add the event listener for the feature layer.
+      featureLayer.addListener("click", handlePlaceClick);
+      // Apply style on load, to enable clicking.
+      applyStyleToSelected();
 
       if (that.isLogin) {
         getUserCheckInData().then((response) => {
           if (response.code === 0) {
             countryIndexData = response.data
-            showCountryDataMarker()
+            // showCountryDataMarker()
           }
         })
       } else {
         countryIndexData = allIndexCountryData
-        showCountryDataMarker()
+        // showCountryDataMarker()
       }
-
-      const infoWindow = new google.maps.InfoWindow();
 
       // 监听地图加载完成事件
       google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
@@ -361,6 +388,27 @@ export default {
 
       });
 
+      // Handle the click event.
+      async function handlePlaceClick(event) {
+        let feature = event.features[0];
+        if (!feature.placeId) return;
+        applyStyleToSelected(feature.placeId);
+      }
+
+      // Apply styles to the map.
+      function applyStyleToSelected(placeid) {
+        // Apply styles to the feature layer.
+        featureLayer.style = (options) => {
+          // Style fill and stroke for a polygon.
+          if (placeid && options.feature.placeId == placeid) {
+            return styleClicked;
+          }
+          // Style only the stroke for the entire feature type.
+          return styleDefault;
+        };
+      }
+
+
       // 加载国家遗迹点数据
       function showCountryDataMarker() {
         countryIndexData.forEach((property, index) => {
@@ -396,6 +444,7 @@ export default {
           lat: previousUserCenter.lat,
           lng: previousUserCenter.lng
         };
+        return;
 
         // 禁用用户操作
         disableUserInteraction();
