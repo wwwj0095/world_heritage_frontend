@@ -109,6 +109,7 @@ import config from '@/common/config'
 import {
   getUserInfo,
   getUserCheckInCount,
+  getUserCheckInPosition,
   getUserCheckInData,
   getUserTokenByTokenKey,
   getDataByLocation
@@ -129,9 +130,14 @@ export default {
       dataDetailRedirectRul: '',
       tabListData: [],
       allIndexData: [],
+      userCheckInPosition: [],
+      userProvincePlaceIds: [],
+      userCountryPlaceIds: [],
       userCheckInTotal: 0,
       dataTotal: 0,
       currentLanguage: 'cn',
+      // currentMapViewType: 'ADMINISTRATIVE_AREA_LEVEL_1',
+      currentMapViewType: 'COUNTRY',
       userInfo: {
         id: '',
         name: '',
@@ -143,6 +149,18 @@ export default {
         width: '100%',
         height: '650px',
       },
+      mapLayerDefaultStyle: {
+        strokeColor: "#810FCB",
+        strokeOpacity: 0.1,
+        strokeWeight: 0.1,
+        fillColor: "white",
+        fillOpacity: 0.1, // Polygons must be visible to receive click events.
+      },
+      mapLayerActivityStyle: {
+        ...this.mapLayerDefaultStyle,
+        fillColor: "#810FCB",
+        fillOpacity: 0.5,
+      }
     };
   },
   onLoad(options) {
@@ -162,6 +180,7 @@ export default {
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
       this.getUserCheckInDataCount()
+      this.getUserCheckInPlace()
     }
     // TODO 临时使用
     this.dataDetailRedirectRul = `${config.baseUrl}client/#/pages/index/detail?id=`
@@ -210,6 +229,29 @@ export default {
       }
     },
   },
+  watch: {
+    userCheckInPosition(newVal, oldVal) {
+      if (newVal) {
+        newVal.forEach(item => {
+          this.userProvincePlaceIds.push(item.additional_info.province_place_id)
+          this.userCountryPlaceIds.push(item.additional_info.country_place_id)
+        })
+        let featureLayer = this.map.getFeatureLayer(this.currentMapViewType);
+        featureLayer.style = (options) => {
+          if (this.currentMapViewType === 'ADMINISTRATIVE_AREA_LEVEL_1') {
+            if (this.userProvincePlaceIds.includes(options.feature.placeId)) {
+              return this.mapLayerActivityStyle;
+            }
+          } else {
+            if (this.userCountryPlaceIds.includes(options.feature.placeId)) {
+              return this.mapLayerActivityStyle;
+            }
+          }
+          return this.mapLayerDefaultStyle;
+        };
+      }
+    }
+  },
   async mounted() {
     await this.$gmapApiPromiseLazy();
     // 根据不同手机设置不同的高度
@@ -236,6 +278,11 @@ export default {
         this.userCheckInTotal = response.data
       })
     },
+    getUserCheckInPlace() {
+      getUserCheckInPosition().then(item => {
+        this.userCheckInPosition = item.data
+      })
+    },
     getUserTokenKey(login_type, token_key) {
       getUserTokenByTokenKey({ params: { login_type: login_type , token_key: token_key}}).then((response) => {
         if (response.data) {
@@ -250,8 +297,9 @@ export default {
       getUserInfo({ custom: { auth: true, login_type: login_type , token_key: token_key}}).then((response) => {
         this.$store.commit('login', response);
         this.userInfo = response.data.user;
-        this.initMap()
-        uni.hideLoading()
+        var currentUrl = window.location.href;
+        var newUrl = currentUrl.split('?')[0];
+        window.location.replace(newUrl);
       })
     },
     showSNSLogin() {
@@ -290,56 +338,26 @@ export default {
       let countryDataMarkers = [];
       let indexData = [];
       let indexDataMarkers = [];
-      let featureLayer;
       let infoWindow;
-      let clickedPolygon;
       let indexDataBigMarkers = [];
       let previousZoom = 0; // 用于记录前一个缩放级别
       let previousUserCenter = that.center // // 用于记录前一个用户中心点的坐标
 
-      // Stroke and fill with minimum opacity value.
-      //@ts-ignore
-      const styleDefault = {
-        strokeColor: "#810FCB",
-        strokeOpacity: 0.1,
-        strokeWeight: 0.1,
-        fillColor: "white",
-        fillOpacity: 0.1, // Polygons must be visible to receive click events.
-      };
-      // Style for the clicked Administrative Area Level 2 polygon.
-      //@ts-ignore
-      const styleClicked = {
-        ...styleDefault,
-        fillColor: "#810FCB",
-        fillOpacity: 0.5,
-      };
 
 
       infoWindow = new google.maps.InfoWindow();
-      // Add the feature layer.
-      //@ts-ignore
-      featureLayer = map.getFeatureLayer("ADMINISTRATIVE_AREA_LEVEL_1");
-      // Add the event listener for the feature layer.
-      featureLayer.addListener("click", handlePlaceClick);
-      // Apply style on load, to enable clicking.
-      applyStyleToSelected();
 
       if (that.isLogin) {
         getUserCheckInData().then((response) => {
           if (response.code === 0) {
             countryIndexData = response.data
-            // showCountryDataMarker()
+            showCountryDataMarker()
           }
         })
       } else {
         countryIndexData = allIndexCountryData
-        // showCountryDataMarker()
+        showCountryDataMarker()
       }
-
-      // 监听地图加载完成事件
-      google.maps.event.addListenerOnce(map, 'tilesloaded', function(){
-        // 当地图加载完成后执行的操作
-      });
 
       // 监听地图拖动事件
       google.maps.event.addListener(map, 'dragend', function() {
@@ -375,6 +393,10 @@ export default {
           setCountryMarkerView(false)
           setDataMarkerView(true)
           setDataBigMarkerView(false)
+
+          // 去除所有的点击高亮区域
+          setCountryHighLight(map, false)
+          setProvinceHighlight(map, true)
         } else if (currentZoom >= 6) {
           setCountryMarkerView(false)
           setDataMarkerView(false)
@@ -383,33 +405,16 @@ export default {
           setCountryMarkerView()
           setDataMarkerView(false)
           setDataBigMarkerView(false)
+          setCountryHighLight(map, true)
+          setProvinceHighlight(map, false)
           that.markersLoaded = false
         }
 
       });
 
-      // Handle the click event.
-      async function handlePlaceClick(event) {
-        let feature = event.features[0];
-        if (!feature.placeId) return;
-        applyStyleToSelected(feature.placeId);
-      }
-
-      // Apply styles to the map.
-      function applyStyleToSelected(placeid) {
-        // Apply styles to the feature layer.
-        featureLayer.style = (options) => {
-          // Style fill and stroke for a polygon.
-          if (placeid && options.feature.placeId == placeid) {
-            return styleClicked;
-          }
-          // Style only the stroke for the entire feature type.
-          return styleDefault;
-        };
-      }
 
 
-      // 加载国家遗迹点数据
+      // 加载国家点数据
       function showCountryDataMarker() {
         countryIndexData.forEach((property, index) => {
           if (property.latitude !== '' && property.longitude !== '') {
@@ -444,7 +449,6 @@ export default {
           lat: previousUserCenter.lat,
           lng: previousUserCenter.lng
         };
-        return;
 
         // 禁用用户操作
         disableUserInteraction();
@@ -455,7 +459,7 @@ export default {
           if (response.code === 0) {
             indexData = response.data
             if (indexData.length) {
-              that.markersLoaded = true; // 标记遗迹点数据已加载
+              that.markersLoaded = true; // 标记点数据已加载
             }
             indexData.forEach((property, index) => {
               if (property.latitude !== '' && property.longitude !== '') {
@@ -489,7 +493,6 @@ export default {
           });
         }
       }
-      // 处理遗迹的标签
       function setDataMarkerView(is_show = true) {
         if (is_show) {
           indexData.forEach((property, index) => {
@@ -510,7 +513,7 @@ export default {
           });
         }
       }
-      // 处理PC端遗迹可点击的标签
+      // 处理PC端可点击的标签
       function PCClickContent(property) {
         let svg = ''
         if (property.category === 'Cultural') {
@@ -546,7 +549,7 @@ export default {
 
         return `<div style="padding-right: 12px; padding-bottom: 12px">` + start_content + svg + middle_content + end_content + `</div>`
       }
-      // 处理移动端遗迹可点击的标签
+      // 处理移动端可点击的标签
       function mobileClickContent(property) {
         let svg = ''
         let hrefUrl = `${that.dataDetailRedirectRul}${property.id}`
@@ -604,7 +607,7 @@ export default {
 
         return start_content + svg + middle_content + end_content
       }
-      // 处理遗迹可点击的标签
+      // 处理可点击的标签
       function setDataBigMarkerView(is_show = true) {
         if (is_show) {
           indexData.forEach((property, index) => {
@@ -635,6 +638,28 @@ export default {
             marker.setMap(null);
           });
         }
+      }
+      function setCountryHighLight(map, is_show = true) {
+        let featureLayer = map.getFeatureLayer(that.currentMapViewType);
+        featureLayer.style = (options) => {
+          if (is_show) {
+            if (that.userCountryPlaceIds.includes(options.feature.placeId)) {
+              return that.mapLayerActivityStyle;
+            }
+          }
+          return that.mapLayerDefaultStyle;
+        };
+      }
+      function setProvinceHighlight(map, is_show = false) {
+        let featureLayer = map.getFeatureLayer('ADMINISTRATIVE_AREA_LEVEL_1');
+        featureLayer.style = (options) => {
+          if (is_show) {
+            if (that.userProvincePlaceIds.includes(options.feature.placeId)) {
+              return that.mapLayerActivityStyle;
+            }
+          }
+          return that.mapLayerDefaultStyle;
+        };
       }
       function buildDataMark() {
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");

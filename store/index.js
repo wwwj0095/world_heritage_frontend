@@ -6,7 +6,8 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
     state:{
         isLogin: false,
-        currentLanguage: uni.getStorageSync('local_lang') || 'en'
+        currentLanguage: uni.getStorageSync('local_lang') || 'en',
+        setMapViewType: uni.getStorageSync('map_view_type') || 'ADMINISTRATIVE_AREA_LEVEL_1',
     },
     mutations: {
         login(state, response) {
@@ -28,6 +29,9 @@ const store = new Vuex.Store({
         },
         setLocalLanguage(state, lang) {
             uni.setStorageSync('local_lang', lang);
+        },
+        setMapViewType(state, type) {
+            uni.setStorageSync('map_view_type', type);
         }
     },
     actions: {

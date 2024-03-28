@@ -207,8 +207,9 @@
 </template>
 
 <script>
-import {getListData, getCheckInInfo} from '@/util/request/api.js';
+import {getListData, getCheckInInfo, storeCheckIn} from '@/util/request/api.js';
 import { Node, Canvas } from '@/pages/components/html2canvas/index';
+import {getGoogleMapsAPI} from "gmap-vue";
 
 export default {
   data() {
@@ -219,6 +220,7 @@ export default {
       selectedHeritageCount: 0,
       selectedHeritageList: [],
       countryHeritageList: [],
+      geocoder: {},
       currentLanguage: 'jp',
       range: [
         {value: 0, text: '全て'}
@@ -255,6 +257,7 @@ export default {
     };
   },
   computed: {
+    google: getGoogleMapsAPI,
     isLogin() {
       return this.$store.state.isLogin;
     },
@@ -380,6 +383,9 @@ export default {
     this.listQuery.select_ids = options.params
     this.currentLanguage = uni.getStorageSync('local_lang');
     this.getCheckInInformation(options.params)
+    if (this.isLogin) {
+
+    }
   },
   async mounted() {
     await this.$gmapApiPromiseLazy();
@@ -429,7 +435,13 @@ export default {
         }
         if (response.code == 0) {
           this.selectedDataStatistics = response.data
-          console.log(this.selectedDataStatistics);
+          if (this.isLogin) {
+            this.geocodeAddresses(this.selectedDataStatistics.check_in_position).then(response => {
+              storeCheckIn(response).then(res => {
+                console.log(res);
+              })
+            })
+          }
           // 遍历该数据，为每个大洲变量赋值
           this.selectedDataStatistics.continent_data_list.forEach((item, index) => {
             if (item.name_en === "Europe") {
@@ -459,6 +471,65 @@ export default {
       }).catch((error) => {
         this.showToast('データの取得に失敗しました')
       })
+    },
+    async geocodeAddresses(checkInPosition) {
+      let postData = [];
+      var geocoder = new google.maps.Geocoder();
+
+      // 定义一个辅助函数，用于获取地点的 Place ID
+      async function getPlaceIdFromAddress(address) {
+        return new Promise((resolve, reject) => {
+          geocoder.geocode({ address: address }, function(results, status) {
+            if (status === 'OK' && results[0]) {
+              resolve(results[0].place_id);
+            } else {
+              resolve(null);
+            }
+          });
+        });
+      }
+
+
+      for (const item of checkInPosition) {
+        var latlng = { lat: parseFloat(item.latitude), lng: parseFloat(item.longitude) };
+
+        // 发起逆地理编码请求
+        const [results, status] = await new Promise((resolve, reject) => {
+          geocoder.geocode({ location: latlng }, function(results, status) {
+            resolve([results, status]);
+          });
+        });
+
+        if (status === 'OK' && results[0]) {
+          var countryName = null;
+          var provinceName = null;
+
+          // 遍历地址组件，找到国家和省份级别的信息
+          results[0].address_components.forEach(function(component) {
+            if (component.types.includes('country')) {
+              countryName = component.long_name;
+            } else if (component.types.includes('administrative_area_level_1')) {
+              provinceName = component.long_name;
+            }
+          });
+          // 获取国家和省份的 Place ID
+          const countryPlaceId = await getPlaceIdFromAddress(countryName);
+          const provincePlaceId = await getPlaceIdFromAddress(provinceName);
+
+          // 将数据添加到 postData 中
+          postData.push({
+            app_data_id: item.id,
+            country_place_id: countryPlaceId,
+            province_place_id: provincePlaceId,
+            country_name: countryName,
+            province_name: provinceName,
+            latitude: item.latitude,
+            longitude: item.longitude
+          });
+        }
+      }
+
+      return postData;
     },
     // 生成当前页面的背景图片
     genStateBgImageForPage(imageX) {
