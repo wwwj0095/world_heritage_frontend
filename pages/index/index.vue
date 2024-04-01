@@ -136,8 +136,8 @@ export default {
       userCheckInTotal: 0,
       dataTotal: 0,
       currentLanguage: 'cn',
-      // currentMapViewType: 'ADMINISTRATIVE_AREA_LEVEL_1',
       currentMapViewType: 'COUNTRY',
+      featureLayer: {},
       userInfo: {
         id: '',
         name: '',
@@ -180,7 +180,7 @@ export default {
     if (this.isLogin) {
       this.userInfo = uni.getStorageSync('cur_user');
       this.getUserCheckInDataCount()
-      this.getUserCheckInPlace()
+      // this.getUserCheckInPlace()
     }
     // TODO 临时使用
     this.dataDetailRedirectRul = `${config.baseUrl}client/#/pages/index/detail?id=`
@@ -230,25 +230,11 @@ export default {
     },
   },
   watch: {
-    userCheckInPosition(newVal, oldVal) {
-      if (newVal) {
-        newVal.forEach(item => {
-          this.userProvincePlaceIds.push(item.additional_info.province_place_id)
-          this.userCountryPlaceIds.push(item.additional_info.country_place_id)
-        })
-        let featureLayer = this.map.getFeatureLayer(this.currentMapViewType);
-        featureLayer.style = (options) => {
-          if (this.currentMapViewType === 'ADMINISTRATIVE_AREA_LEVEL_1') {
-            if (this.userProvincePlaceIds.includes(options.feature.placeId)) {
-              return this.mapLayerActivityStyle;
-            }
-          } else {
-            if (this.userCountryPlaceIds.includes(options.feature.placeId)) {
-              return this.mapLayerActivityStyle;
-            }
-          }
-          return this.mapLayerDefaultStyle;
-        };
+    map: function (newMap, oldMap) {
+      if (newMap) {
+        if (this.isLogin) {
+          this.getUserCheckInPlace()
+        }
       }
     }
   },
@@ -281,6 +267,23 @@ export default {
     getUserCheckInPlace() {
       getUserCheckInPosition().then(item => {
         this.userCheckInPosition = item.data
+        this.userCheckInPosition.forEach(item => {
+          this.userProvincePlaceIds.push(item.additional_info.province_place_id)
+          this.userCountryPlaceIds.push(item.additional_info.country_place_id)
+        })
+        console.log('会开始渲染吗');
+        this.featureLayer.style = (options) => {
+          if (this.currentMapViewType === 'ADMINISTRATIVE_AREA_LEVEL_1') {
+            if (this.userProvincePlaceIds.includes(options.feature.placeId)) {
+              return this.mapLayerActivityStyle;
+            }
+          } else {
+            if (this.userCountryPlaceIds.includes(options.feature.placeId)) {
+              return this.mapLayerActivityStyle;
+            }
+          }
+          return this.mapLayerDefaultStyle;
+        };
       })
     },
     getUserTokenKey(login_type, token_key) {
@@ -310,9 +313,9 @@ export default {
       let that = this
       that.map = new google.maps.Map(document.getElementById("map"), {
         center: this.center,
-        zoom: 3,
-        minZoom: 3,
-        maxZoom: 14,
+        zoom: 2,
+        minZoom: 2,
+        maxZoom: 7,
         mapId: "555a779519b7419",
         zoomControl: false, // 禁用缩放控件
         streetViewControl: false, // 禁用街景视图控件
@@ -342,7 +345,7 @@ export default {
       let indexDataBigMarkers = [];
       let previousZoom = 0; // 用于记录前一个缩放级别
       let previousUserCenter = that.center // // 用于记录前一个用户中心点的坐标
-
+      that.featureLayer = that.map.getFeatureLayer(that.currentMapViewType);
 
 
       infoWindow = new google.maps.InfoWindow();
@@ -640,8 +643,7 @@ export default {
         }
       }
       function setCountryHighLight(map, is_show = true) {
-        let featureLayer = map.getFeatureLayer(that.currentMapViewType);
-        featureLayer.style = (options) => {
+        that.featureLayer.style = (options) => {
           if (is_show) {
             if (that.userCountryPlaceIds.includes(options.feature.placeId)) {
               return that.mapLayerActivityStyle;

@@ -130,7 +130,7 @@
         "template" : "template.h5.html",
         "router" : {
             "mode" : "hash",
-            "base" : ""
+            "base" : "/dist/"
         },
         "optimization" : {
             "treeShaking" : {
@@ -147,7 +147,7 @@
         },
         "domain" : "",
         "devServer" : {
-            "https" : false
+            "https" : true
         }
     },
     "vueVersion" : "2",
